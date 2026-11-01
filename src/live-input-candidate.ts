@@ -64,7 +64,8 @@ export class LiveInputCandidateGate {
   candidate(actor:SceneActor,nowMs:number){
     requireSceneRole(actor,this.scope,['organizer','operator'],nowMs);
     const report=this.accepted;
-    if(!report||nowMs>=report.expiresAtMs||nowMs-report.measuredAtMs>300000)return null;
+    if(!report||nowMs<report.measuredAtMs||nowMs>=report.expiresAtMs||
+      nowMs-report.measuredAtMs>300000)return null;
     return {inputDeviceId:report.inputDeviceId,monitorRouteId:report.monitorRouteId,
       evidenceExpiresAtMs:report.expiresAtMs,fieldValidated:false as const};
   }

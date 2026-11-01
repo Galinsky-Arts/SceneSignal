@@ -19,6 +19,7 @@ test('signed-verifier adapter candidate is bounded, expires and cannot start an 
  assert.deepEqual(await g.admit(actor,'opaque-proof',1100),{duplicate:false,fieldValidated:false});
  assert.deepEqual(g.candidate(actor,1100),{inputDeviceId:'mic',monitorRouteId:'performer-monitor',
    evidenceExpiresAtMs:5000,fieldValidated:false});
+ assert.equal(g.candidate(actor,900),null);
  assert.equal(g.candidate(actor,5000),null);
  g.clear(actor,1101);
  assert.equal(g.candidate(actor,1102),null);
