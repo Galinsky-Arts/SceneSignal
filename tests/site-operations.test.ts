@@ -44,7 +44,7 @@ test('fake operator, stale events, foreign roles and malformed classifications d
  assert.throws(()=>f.operations.recordIncident(unauthorized,event,1100),/SCENE_ACCESS_DENIED/);
  assert.throws(()=>f.operations.recordIncident({...host,tenantId:'other'},event,1100),
   /SCENE_ACCESS_DENIED/);
- assert.throws(()=>f.operations.recordIncident(host,{...event,observedAtMs:0},650000),
+ assert.throws(()=>f.operations.recordIncident({...host,expiresAtMs:700000},{...event,observedAtMs:0},650000),
   /STALE_SITE_INCIDENT/);
  assert.throws(()=>f.operations.recordIncident(host,{...event,kind:'UNKNOWN' as 'WEATHER'},1100),
   /INVALID_SITE_INCIDENT_CLASSIFICATION/);
