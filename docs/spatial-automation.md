@@ -22,3 +22,15 @@ reuse a scene ID with changed bindings.
 This is a deterministic endpoint-side planning envelope only. Real synchronized
 hardware switching, audible click suppression, physical speaker calibration,
 consent timing, and acoustic field safety remain unverified release gates.
+
+## Workspace integration
+
+An approved timeline cannot replace the workspace scene until the workspace
+has first applied that same scoped timeline in its original scene. Once bound,
+a distinct scene cut is admitted only at the programmed boundary with fresh
+source-rights validation, matching frame/sample-rate alignment, no active Spime
+control and an authorized organizer/operator. The workspace increments its
+monotonic revision and continues the same active timeline. Foreign, unbound
+automation cannot smuggle in a new source; manual edits invalidate stale
+timelines. A rejected boundary leaves the old scene unchanged. This retains
+the renderer's independent signed output and field-safety requirements.

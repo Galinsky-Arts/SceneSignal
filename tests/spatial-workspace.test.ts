@@ -70,3 +70,55 @@ test('manual scene revision supersedes older spatial automation',()=>{
  assert.throws(()=>f.workspace.applyAutomation(organizer,timeline,1600),/AUTOMATION_SUPERSEDED_BY_MANUAL_EDIT/);
  assert.equal(f.workspace.snapshot().scene.revision,3);
 });
+
+test('workspace adopts a distinct scheduled scene only after binding the original timeline',()=>{
+ const f=fixture();
+ const sceneB={...f.scene,id:'second-scene',sources:[{...f.scene.sources[0]!,
+   id:'drums',assetId:'second-stem',position:{x:3,y:0,z:0}}]};
+ const moved={...sceneB,sources:[{...sceneB.sources[0]!,position:{x:7,y:0,z:0}}]};
+ const timeline=new SpatialAutomation(scope,()=>true);
+ timeline.schedule(organizer,[{atMs:1000,scene:f.scene},{atMs:2000,scene:sceneB},{atMs:3000,scene:moved}],900);
+ assert.equal(f.workspace.applyAutomation(organizer,timeline,1500),true);
+ assert.equal(f.workspace.snapshot().scene.id,'scene');
+ assert.equal(f.workspace.applyAutomation(organizer,timeline,2000),true);
+ assert.equal(f.workspace.snapshot().scene.id,'second-scene');
+ assert.deepEqual(f.workspace.snapshot().scene.sources.map(s=>s.assetId),['second-stem']);
+ assert.equal(f.workspace.snapshot().scene.revision,3);
+ assert.equal(f.workspace.applyAutomation(organizer,timeline,2500),true);
+ assert.equal(f.workspace.snapshot().scene.sources[0]!.position.x,5);
+ assert.equal(f.workspace.snapshot().scene.revision,4);
+});
+test('a foreign unbound scene cannot replace an authorized workspace at a boundary',()=>{
+ const f=fixture();
+ const substituted={...f.scene,id:'unbound-scene',sources:[{...f.scene.sources[0]!,assetId:'foreign-stem'}]};
+ const automation=new SpatialAutomation(scope,()=>true);
+ automation.schedule(organizer,[{atMs:1000,scene:f.scene},{atMs:2000,scene:substituted}],900);
+ assert.throws(()=>f.workspace.applyAutomation(organizer,automation,2000),/AUTOMATION_SOURCE_CONFLICT/);
+ assert.equal(f.workspace.snapshot().scene.id,'scene');
+ assert.equal(f.workspace.snapshot().scene.revision,1);
+ assert.throws(()=>f.workspace.applyAutomation(fan,automation,2000),/SCENE_ACCESS_DENIED/);
+});
+test('cross-scene source rights and incompatible renderer alignment fail closed',()=>{
+ const f=fixture();
+ let allow=true;
+ const target={...f.scene,id:'new-scene',sources:[{...f.scene.sources[0]!,assetId:'restricted-stem'}]};
+ const automation=new SpatialAutomation(scope,()=>true);
+ automation.schedule(organizer,[{atMs:1000,scene:f.scene},{atMs:2000,scene:target}],900);
+ f.workspace.applyAutomation(organizer,automation,1500);
+ const withRevokedRights=new SpatialAutomation(scope,()=>allow);
+ withRevokedRights.schedule(organizer,[{atMs:1000,scene:f.scene},{atMs:2000,scene:target}],900);
+ // A different timeline is never allowed to inherit the current binding.
+ assert.throws(()=>f.workspace.applyAutomation(organizer,withRevokedRights,2000),/AUTOMATION_SOURCE_CONFLICT/);
+ assert.equal(f.workspace.snapshot().scene.id,'scene');
+ const restricted=new SpatialWorkspace(f.session,f.scene,asset=>asset!=='restricted-stem');
+ restricted.applyAutomation(organizer,automation,1500);
+ assert.throws(()=>restricted.applyAutomation(organizer,automation,2000),/SPATIAL_SOURCE_RIGHTS_DENIED/);
+ assert.equal(restricted.snapshot().scene.id,'scene');
+ const otherRate={...target,sampleRate:16000,frames:16000};
+ const misaligned=new SpatialAutomation(scope,()=>true);
+ misaligned.schedule(organizer,[{atMs:1000,scene:f.scene},{atMs:2000,scene:otherRate}],900);
+ const isolated=new SpatialWorkspace(f.session,f.scene,()=>true);
+ isolated.applyAutomation(organizer,misaligned,1500);
+ assert.throws(()=>isolated.applyAutomation(organizer,misaligned,2000),/SCENE_REVISION_OR_ALIGNMENT_CONFLICT/);
+ assert.equal(isolated.snapshot().scene.id,'scene');
+});

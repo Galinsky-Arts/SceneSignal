@@ -48,13 +48,29 @@ export class SpatialWorkspace {
         'AUTOMATION_SUPERSEDED_BY_MANUAL_EDIT');
     else invariant(sampled.revision === this.scene.revision,
       'AUTOMATION_BASE_REVISION_CONFLICT');
-    invariant(sampled.sources.length === this.scene.sources.length &&
-      sampled.sources.every((source, index) =>
-        source.id === this.scene.sources[index]!.id &&
-        source.assetId === this.scene.sources[index]!.assetId &&
-        source.role === this.scene.sources[index]!.role),
-      'AUTOMATION_SOURCE_CONFLICT');
-    this.compose(actor, {...sampled, revision: this.scene.revision + 1}, nowMs);
+    if (sampled.id !== this.scene.id) {
+      // A distinct-scene boundary is allowed only after this same scoped,
+      // authorized timeline has been bound to the workspace in its old scene.
+      // A freshly substituted timeline may not replace private sources.
+      invariant(this.activeAutomation?.timeline === automation, 'AUTOMATION_SOURCE_CONFLICT');
+      validateScene(sampled);
+      invariant(sampled.sampleRate === this.scene.sampleRate &&
+        sampled.frames === this.scene.frames, 'SCENE_REVISION_OR_ALIGNMENT_CONFLICT');
+      invariant(sampled.sources.every(source =>
+        this.rightsAllowSource(source.assetId, nowMs) === true),
+        'SPATIAL_SOURCE_RIGHTS_DENIED');
+      // Do not interpolate source IDs, issue stale output commands, or
+      // bypass the independent renderer's playback authorization.
+      this.scene = structuredClone({...sampled, revision: this.scene.revision + 1});
+    } else {
+      invariant(sampled.sources.length === this.scene.sources.length &&
+        sampled.sources.every((source, index) =>
+          source.id === this.scene.sources[index]!.id &&
+          source.assetId === this.scene.sources[index]!.assetId &&
+          source.role === this.scene.sources[index]!.role),
+        'AUTOMATION_SOURCE_CONFLICT');
+      this.compose(actor, {...sampled, revision: this.scene.revision + 1}, nowMs);
+    }
     this.lastAutomationAtMs = nowMs;
     this.activeAutomation = { timeline: automation, revision: this.scene.revision };
     return true;
