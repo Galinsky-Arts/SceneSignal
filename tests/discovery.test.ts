@@ -61,3 +61,15 @@ test('printable discovery guide uses only the authorized active public projectio
  discovery.unpublish(organizer,f.session,503);
  assert.equal(discovery.printableGuide('event',504),null);
 });
+
+test('large-print HTML is withheld on unpublish and omits all private site evidence',async()=>{
+ const f=await prepared();await f.authorize();const discovery=new SceneDiscovery();
+ discovery.publish(organizer,f.session,f.lineup,{eventArea:'East lawn',accessibilitySummary:null},501);
+ const html=discovery.printableHtmlGuide('event',502)!;
+ assert.match(html,/East lawn/);
+ assert.match(html,/do not need a phone or an account/);
+ for(const secret of ['PRIVATE_SITE','PRIVATE_OBJECT','conditionsDigestHex','encryptedEvidenceObjectId'])
+   assert.equal(html.includes(secret),false);
+ discovery.unpublish(organizer,f.session,503);
+ assert.equal(discovery.printableHtmlGuide('event',504),null);
+});

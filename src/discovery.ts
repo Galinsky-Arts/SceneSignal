@@ -1,7 +1,7 @@
 import { identifier, integer, invariant } from '@neophilism/distributed-audio-engine';
 import { requireSceneRole } from './session.js';
 import type { SceneActor, SceneSession } from './session.js';
-import {accessibleVisitorGuide} from './accessible-event.js';
+import {accessibleVisitorGuide,accessibleVisitorHtml} from './accessible-event.js';
 import type { SceneLineup, PublicPerformer } from './lineup.js';
 
 export interface PublicSessionPage {
@@ -74,6 +74,10 @@ export class SceneDiscovery {
   printableGuide(sessionId: string, nowMs: number): string | null {
     const page = this.detail(sessionId, nowMs);
     return page ? accessibleVisitorGuide(page) : null;
+  }
+  printableHtmlGuide(sessionId: string, nowMs: number): string | null {
+    const page = this.detail(sessionId, nowMs);
+    return page ? accessibleVisitorHtml(page) : null;
   }
   discover(nowMs: number, query = ''): PublicSessionPage[] {
     integer(nowMs); invariant(typeof query === 'string' && query.length <= 120, 'INVALID_DISCOVERY_QUERY');
