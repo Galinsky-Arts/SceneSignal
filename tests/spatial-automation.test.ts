@@ -50,3 +50,46 @@ test('mutating the constructor scope cannot rebind an authorized private timelin
  automation.schedule(organizer,frames,900);
  assert.equal(automation.sample(1500)!.sources[0]!.position.x,5);
 });
+
+test('a distinct authorized scene switches at its exact clock boundary without leaking new stems early',()=>{
+ const chorus={...scene,id:'scene-chorus',sources:[{...scene.sources[0]!,
+   id:'drums',assetId:'encrypted-drums',position:{x:4,y:0,z:0},gain:0.5}]};
+ const moved={...chorus,sources:[{...chorus.sources[0]!,position:{x:8,y:0,z:0},gain:0.3}]};
+ const timeline=[frames[0]!,{atMs:2000,scene:chorus},{atMs:3000,scene:moved}];
+ const automation=new SpatialAutomation(scope,()=>true);
+ automation.schedule(organizer,timeline,900);
+ for(const at of [1000,1500,1999]){
+   const current=automation.sample(at)!;
+   assert.equal(current.id,'scene');
+   assert.deepEqual(current.sources.map(source=>source.assetId),['encrypted-stem']);
+   assert.equal(current.sources[0]!.position.x,0);
+ }
+ assert.equal(automation.sample(2000)!.id,'scene-chorus');
+ assert.deepEqual(automation.sample(2000)!.sources.map(source=>source.assetId),['encrypted-drums']);
+ assert.equal(automation.sample(2500)!.sources[0]!.position.x,6);
+ assert.equal(automation.sample(3000)!.sources[0]!.position.x,8);
+});
+test('cross-scene rights are checked on each frame and again at its scheduled playback time',()=>{
+ let allowDrums=true;
+ const chorus={...scene,id:'scene-chorus',sources:[{...scene.sources[0]!,
+   id:'drums',assetId:'encrypted-drums'}]};
+ const timeline=[frames[0]!,{atMs:2000,scene:chorus}];
+ const automation=new SpatialAutomation(scope,asset=>asset!=='encrypted-drums'||allowDrums);
+ automation.schedule(organizer,timeline,900);
+ allowDrums=false;
+ assert.equal(automation.sample(1500)!.id,'scene');
+ assert.throws(()=>automation.sample(2000),/AUTOMATION_SOURCE_RIGHTS_DENIED/);
+ assert.throws(()=>automation.schedule(organizer,timeline,900),/AUTOMATION_SOURCE_RIGHTS_DENIED/);
+});
+test('revisiting a scene identifier with changed revision or source binding is denied',()=>{
+ const chorus={...scene,id:'scene-chorus'};
+ const changed={...scene,revision:2};
+ const automation=new SpatialAutomation(scope,()=>true);
+ assert.throws(()=>automation.schedule(organizer,
+   [frames[0]!,{atMs:2000,scene:chorus},{atMs:3000,scene:changed}],900),
+   /AUTOMATION_SCENE_OR_SOURCE_CONFLICT/);
+ const alternative={...scene,sources:[{...scene.sources[0]!,assetId:'another-encrypted-asset'}]};
+ assert.throws(()=>automation.schedule(organizer,
+   [frames[0]!,{atMs:2000,scene:chorus},{atMs:3000,scene:alternative}],900),
+   /AUTOMATION_SCENE_OR_SOURCE_CONFLICT/);
+});

@@ -31,8 +31,9 @@ export class SpatialAutomation {
     invariant(Array.isArray(frames) && frames.length >= 2 && frames.length <= 256,
       'INVALID_AUTOMATION_LENGTH');
     let previous = nowMs - 1;
-    let anchor: SpatialScene | null = null;
-    let sourceIds: string[] = [];
+    // One scene ID always refers to a stable version and source binding.
+    // Different scene IDs may be scheduled as discrete, authorized cuts.
+    const knownScenes = new Map<string, SpatialScene>();
     for (const frame of frames) {
       invariant(frame && typeof frame === 'object' && !Array.isArray(frame) &&
         Object.keys(frame).sort().join(',') === 'atMs,scene', 'INVALID_AUTOMATION_FRAME');
@@ -40,21 +41,17 @@ export class SpatialAutomation {
       invariant(frame.atMs > previous && frame.atMs <= nowMs + 86_400_000,
         'AUTOMATION_CLOCK_ORDER');
       validateScene(frame.scene);
-      if (!anchor) {
-        anchor = frame.scene;
-        sourceIds = frame.scene.sources.map(source => source.id);
-      } else {
-        invariant(frame.scene.id === anchor.id &&
-          frame.scene.revision === anchor.revision &&
-          frame.scene.sampleRate === anchor.sampleRate &&
-          frame.scene.frames === anchor.frames &&
-          frame.scene.sources.length === sourceIds.length &&
+      const known = knownScenes.get(frame.scene.id);
+      if (!known) knownScenes.set(frame.scene.id, frame.scene);
+      else invariant(frame.scene.revision === known.revision &&
+          frame.scene.sampleRate === known.sampleRate &&
+          frame.scene.frames === known.frames &&
+          frame.scene.sources.length === known.sources.length &&
           frame.scene.sources.every((source, index) =>
-            source.id === sourceIds[index] &&
-            source.assetId === anchor!.sources[index]!.assetId &&
-            source.role === anchor!.sources[index]!.role),
+            source.id === known.sources[index]!.id &&
+            source.assetId === known.sources[index]!.assetId &&
+            source.role === known.sources[index]!.role),
           'AUTOMATION_SCENE_OR_SOURCE_CONFLICT');
-      }
       invariant(frame.scene.sources.every(source =>
         this.rightsAllowSource(source.assetId, nowMs) === true),
         'AUTOMATION_SOURCE_RIGHTS_DENIED');
@@ -79,7 +76,9 @@ export class SpatialAutomation {
     invariant(left.scene.sources.every(source =>
       this.rightsAllowSource(source.assetId, nowMs) === true),
       'AUTOMATION_SOURCE_RIGHTS_DENIED');
-    if (left === right) return structuredClone(left.scene);
+    // Different scenes may have different source sets, rights and output routes.
+    // Hold the old scene until the boundary: never interpolate across identities.
+    if (left === right || left.scene.id !== right.scene.id) return structuredClone(left.scene);
     const fraction = (nowMs - left.atMs) / (right.atMs - left.atMs);
     const scene = structuredClone(left.scene);
     scene.sources = scene.sources.map((source, index) => {
