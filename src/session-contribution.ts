@@ -14,13 +14,21 @@ export interface VerifiedSessionContribution {
 export type ContributionVerifier =
   (opaqueReceipt: string) => Promise<VerifiedSessionContribution | null>;
 
+export interface DurableContributionStore {
+  /** Must atomically deduplicate by (tenant, session, event) and enforce both caps. */
+  admit(scope: Scope, claim: VerifiedSessionContribution, capSeconds: number,
+    maxRecords: number): Promise<{creditedSeconds: number; duplicate: boolean}>;
+  summary(scope: Scope): Promise<Array<{contributorId: string; creditedSeconds: number}>>;
+}
+
 /** Endpoint-only contribution facts; not an asset, payout or token economy. */
 export class SessionContributionLedger {
   private readonly scope: Scope;
   private readonly records = new Map<string, VerifiedSessionContribution>();
   private readonly seconds = new Map<string, number>();
   constructor(scope: Scope, private readonly verify: ContributionVerifier,
-    private readonly perContributorCapSeconds = 3600) {
+    private readonly perContributorCapSeconds = 3600,
+    private readonly durableStore?: DurableContributionStore) {
     invariant(scope.application === 'scenesignal', 'INVALID_SCENE_APPLICATION');
     identifier(scope.tenantId);identifier(scope.sessionId);
     integer(perContributorCapSeconds,1,86400);
@@ -42,6 +50,10 @@ export class SessionContributionLedger {
     invariant(claim.verifiedAtMs<=nowMs && nowMs-claim.verifiedAtMs<=300000,
       'CONTRIBUTION_EVIDENCE_STALE');
     const saved=structuredClone(claim);
+    // A production deployment must inject a transactional durable store;
+    // do not silently fall back to process-local credit on store failure.
+    if(this.durableStore)
+      return this.durableStore.admit(this.scope,saved,this.perContributorCapSeconds,10000);
     const prior=this.records.get(saved.eventId);
     if(prior){
       invariant(canonicalJson(prior)===canonicalJson(saved),'CONTRIBUTION_REPLAY_CONFLICT');
@@ -55,6 +67,13 @@ export class SessionContributionLedger {
     return { creditedSeconds:credited+saved.seconds,duplicate:false };
   }
   /** Pseudonymous private projection: never reveal receipt strings or source measurements. */
-  summary() {return [...this.seconds.entries()].map(([contributorId,creditedSeconds])=>
-    ({contributorId,creditedSeconds})).sort((a,b)=>a.contributorId.localeCompare(b.contributorId));}
+  summary() {
+    invariant(!this.durableStore,'PERSISTED_SUMMARY_REQUIRES_ASYNC');
+    return [...this.seconds.entries()].map(([contributorId,creditedSeconds])=>
+      ({contributorId,creditedSeconds})).sort((a,b)=>a.contributorId.localeCompare(b.contributorId));
+  }
+  async summaryAuthoritative() {
+    if(this.durableStore)return this.durableStore.summary(this.scope);
+    return this.summary();
+  }
 }

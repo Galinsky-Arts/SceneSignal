@@ -8,3 +8,4 @@ export * from './site-coordinator.js';
 export * from './commerce.js';
 export * from './composition-ingestion.js';
 export * from './session-contribution.js';
+export * from './postgres-contribution-store.js';
