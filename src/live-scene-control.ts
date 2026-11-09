@@ -68,6 +68,7 @@ export class LiveSceneControl {
     this.actor(recipient, nowMs);
     invariant(recipient.identityId !== this.holderId, 'SCENE_CONTROL_SAME_HOLDER');
     this.holderId = recipient.identityId;
+    this.undoState = null;
     this.epoch++;
     this.lastChangeMs = nowMs;
     return this.snapshot();
