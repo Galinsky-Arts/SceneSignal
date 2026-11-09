@@ -1,5 +1,41 @@
 # SceneSignal delivery verification — November 9, 2026
 
+## Current account, spatial and dependency checkpoint
+
+PRs #36–#40 have merged the native session runtime, real account service,
+Render preview configuration, current evidence and encrypted spatial program
+preparation after their required hosted checks. The current suite has **157
+application cases**, four registry cases, **14 real PostgreSQL/HTTP cases** and
+**ten production-C cases**. Chromium exercises actual accounts, ownership,
+organizer-granted collaborator access, refresh, departure, sign-out/private-draft
+clearing, XSS escaping and a phone-sized viewport. No private media/site/key
+upload or external browser request is needed.
+
+The audio pin advances to `532d28a7e479fe25428c315ba415c3722de7b84c`, whose
+seven hosted core/native/Signal/relay/rehearsal checks passed. This includes the
+reviewed bounded provider-checkout lifetime correction and current repository
+evidence. The prepared archive's SHA-512 must match the lockfile, and the prepared
+source must match the exact pin. A regression rejects an old cached lock against
+a new archive; npm's cache cannot substitute earlier dependency bytes unnoticed.
+The clean install, application, PostgreSQL/native and audit checks pass with this
+actual archive. The dependency audit reports zero vulnerabilities.
+
+The owner selected Phillip's Render workspace. Its SceneSignal preview database
+was created, and Blueprint planning succeeded for one free Node service plus that
+database. The plan is awaiting explicit approval required by Render's Blueprint
+tool. No service-live or remote account verification is claimed. The database
+expires December 9, 2026; the plan has no paid fallback and auto-deploy is off.
+The previous GitHub Pages alternative was closed after the owner selected Render.
+
+Remaining operational acceptance includes actual endpoint account/root/key and
+phone provisioning, authenticated recipient program publication, mail/recovery,
+business provider configuration, restore/retention drills and real authorized
+10–20-speaker and larger-scale field qualification. These cannot be supplied by
+local fixtures, generated provider receipts or invented measurements. External
+expert review remains deferred under AGENTS.md; it is not an implementation gate.
+
+The older sections below retain their historical pins and test counts.
+
 ## Subsequent native integration
 
 The later native-runtime delivery advances the audio pin to
