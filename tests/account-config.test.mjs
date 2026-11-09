@@ -20,4 +20,11 @@ test('startup rejects unsafe database transport and does not print credential-be
     assert.ok(!(result.stdout + result.stderr).includes(marker));
     assert.match(result.stderr, /account startup failed/);
   }
+  for (const database of [marker, 'postgres://user:' + marker + '@database.invalid/account?ssl=false']) {
+    const result = spawnSync(process.execPath, ['scripts/render-start.mjs'], { encoding: 'utf8',
+      env: { ...process.env, DATABASE_URL: database, POSTGRES_EXTERNAL_HOST: 'dpg-example-a.virginia-postgres.render.com' } });
+    assert.equal(result.status, 1);
+    assert.ok(!(result.stdout + result.stderr).includes(marker));
+    assert.match(result.stderr, /Render configuration is invalid/);
+  }
 });
