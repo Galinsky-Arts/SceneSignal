@@ -108,7 +108,7 @@ test('cross-scene source rights and incompatible renderer alignment fail closed'
  const withRevokedRights=new SpatialAutomation(scope,()=>allow);
  withRevokedRights.schedule(organizer,[{atMs:1000,scene:f.scene},{atMs:2000,scene:target}],900);
  // A different timeline is never allowed to inherit the current binding.
- assert.throws(()=>f.workspace.applyAutomation(organizer,withRevokedRights,2000),/AUTOMATION_SOURCE_CONFLICT/);
+ assert.throws(()=>f.workspace.applyAutomation(organizer,withRevokedRights,2000),/AUTOMATION_BASE_REVISION_CONFLICT/);
  assert.equal(f.workspace.snapshot().scene.id,'scene');
  const restricted=new SpatialWorkspace(f.session,f.scene,asset=>asset!=='restricted-stem');
  restricted.applyAutomation(organizer,automation,1500);
