@@ -21,12 +21,13 @@ async function fixture(decode?: (body:ControlBody)=>Promise<AcousticObservation>
   await session.authorize(actor,await signControl(authBody,keys.privateKey),authVerifier,async()=>authorization,1000);
   session.activate(actor,2000);
   const verifier=new ControlVerifier(scope,new Map([['key',keys.publicKey]]),new Set(['acoustic-observation']),new MemoryCheckpointStore());
-  const monitor=new SceneAcousticMonitor(session,verifier,decode??(async()=>observation),{maxDbA:75,maxStalenessMs:500});
+  const policy={maxDbA:75,maxStalenessMs:500};
+  const monitor=new SceneAcousticMonitor(session,verifier,decode??(async()=>observation),policy);
   const report=async(sequence=1,nowMs=2250)=>{
     const control:ControlBody={...authBody,action:'acoustic-observation',sequence,issuedAtMs:2100,expiresAtMs:9000};
     return monitor.accept(actor,await signControl(control,keys.privateKey),nowMs);
   };
-  return{monitor,session,keys,stops,report,authBody};
+  return{monitor,session,keys,stops,report,authBody,policy};
 }
 test('reported levels below threshold do not count as verified hardware safety',async()=>{
   const f=await fixture();
@@ -81,4 +82,11 @@ test('cancellation while a report decrypts cannot resurrect observation or speak
   await assert.rejects(pending,/ACOUSTIC_OBSERVATION_SUPERSEDED/);
   assert.equal(f.monitor.status(2260).state,'halted');
   assert.deepEqual(f.stops,['ACOUSTIC_EMERGENCY_STOP']);
+});
+
+test('caller mutation cannot raise an admitted acoustic ceiling',async()=>{
+  const f=await fixture(async()=>({...observation,measuredDbA:78}));
+  f.policy.maxDbA=100;
+  assert.equal((await f.report()).state,'halted');
+  assert.deepEqual(f.stops,['ACOUSTIC_LIMIT_EXCEEDED']);
 });
