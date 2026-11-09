@@ -37,6 +37,7 @@ export class SceneAcousticMonitor {
     private readonly policy: AcousticSafetyPolicy
   ) {
     finite(policy.maxDbA, 30, 130); integer(policy.maxStalenessMs, 100, 60_000);
+    this.policy = structuredClone(policy);
     invariant(verifier.matchesScope(session.snapshot().scope), 'ACOUSTIC_SCOPE_MISMATCH');
     this.siteRevision = session.snapshot().plan.revision;
   }
