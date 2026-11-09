@@ -9,3 +9,4 @@ export * from './commerce.js';
 export * from './composition-ingestion.js';
 export * from './speaker-transitions.js';
 export * from './spatial-automation.js';
+export * from './live-scene-control.js';
