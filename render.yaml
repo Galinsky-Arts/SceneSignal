@@ -1,22 +1,38 @@
-# Public draft-only workspace. This is NOT an operational concert, permits API, or production audio service.
+# $0 preview only. Free PostgreSQL expires after 30 days; no paid fallback.
 services:
   - type: web
-    runtime: static
-    name: scenesignal-draft-preview
-    repo: https://github.com/neophilism/SceneSignal
+    name: scenesignal-preview
+    runtime: node
+    plan: free
+    region: virginia
+    repo: https://github.com/Galinsky-Arts/SceneSignal
     branch: main
-    buildCommand: npm run core:prepare && npm ci --ignore-scripts && npm run check
-    staticPublishPath: web-dist
+    autoDeployTrigger: 'off'
+    buildCommand: npm run core:prepare && npm ci --include=dev --ignore-scripts && npm run build
+    startCommand: node scripts/render-start.mjs
+    healthCheckPath: /healthz
     envVars:
       - key: NODE_VERSION
         value: 24.19.0
-    headers:
-      - path: /*
-        name: X-Content-Type-Options
-        value: nosniff
-      - path: /*
-        name: X-Frame-Options
-        value: DENY
-      - path: /*
-        name: Referrer-Policy
-        value: no-referrer
+      - key: NODE_ENV
+        value: production
+      - key: NPM_CONFIG_INCLUDE
+        value: dev
+      - key: BETTER_AUTH_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: scenesignal-accounts-preview
+          property: connectionString
+      - key: POSTGRES_EXTERNAL_HOST
+        value: dpg-dbp5k8k9v7es73am52kg-a.virginia-postgres.render.com
+databases:
+  - name: scenesignal-accounts-preview
+    plan: free
+    region: virginia
+    postgresMajorVersion: '17'
+    databaseName: scenesignal_accounts_preview
+    user: scenesignal_accounts_preview_user
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: Certificate-verified password-authenticated application connections
