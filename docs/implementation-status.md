@@ -1,5 +1,21 @@
 # SceneSignal implementation and evidence
 
+## Account integration checkpoint — November 9, 2026
+
+The [account service and browser screens](account-service.md) now use real Better
+Auth/PostgreSQL HTTP sessions, ownership and organizer-controlled collaborator
+roles. Current claims come from verified cookies and database memberships, not a
+browser role selector. The account service stores only authorized identity and
+role metadata; private draft content remains local. Sign-out also fences delayed
+private work so it cannot reappear in a cleared draft.
+
+The application suite passes 146 tests plus four registry cases; the actual
+PostgreSQL/HTTP and production-C suites remain separate required CI steps.
+Chromium has exercised actual account creation, ownership creation, sign-out,
+sign-in again, XSS escaping, disabled activation and protected-data minimization.
+Production database/hosting configuration, mail/recovery, endpoint key provisioning
+and physical device qualification are still distinct from these source results.
+
 ## Native runtime checkpoint — November 9, 2026
 
 SceneSignal now pins the integrated audio SDK at
