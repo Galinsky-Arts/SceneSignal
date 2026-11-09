@@ -15,3 +15,4 @@ export * from './postgres-contribution-store.js';
 export * from './accessible-event.js';
 export * from './acoustic-safety.js';
 export * from './site-operations.js';
+export * from './live-input-candidate.js';
