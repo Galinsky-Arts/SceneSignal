@@ -1,8 +1,8 @@
-# CANONICAL PR ROADMAP: registry/roadmap.json. This earlier approved phase manifest is retained; track current PR totals/mappings only in canonical file.
+# CANONICAL PR ROADMAP: registry/prs.json. This earlier approved phase manifest is retained; track current PR totals/mappings only in canonical file.
 project:
   name: SceneSignal
   display_name: SceneSignal
-  repository: neophilism/SceneSignal
+  repository: Galinsky-Arts/SceneSignal
   status: active-development
 
 roadmap:

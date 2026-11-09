@@ -1,5 +1,5 @@
 {
-  "repository": "neophilism/SceneSignal",
+  "repository": "Galinsky-Arts/SceneSignal",
   "title": "SceneSignal",
   "planVerified": true,
   "plannedPrCount": 32,
@@ -9,8 +9,8 @@
   ],
   "scopeNote": "Units filtered by this repository prefix from the multi-repository shared roadmap. Other repository units are not counted here.",
   "schemaVersion": 1,
-  "roadmapVersion": 1,
-  "observedAt": "2026-10-11T17:40:57.644Z",
+  "roadmapVersion": 2,
+  "observedAt": "2026-11-09T22:28:12.434Z",
   "units": [
     {
       "id": "SS-01",
@@ -20,7 +20,12 @@
         2
       ],
       "dependsOn": [],
-      "externalDependencies": [],
+      "externalDependencies": [
+        {
+          "repository": "Galinsky-Arts/Distributed-Audio-Engine",
+          "unitId": "DAE-01"
+        }
+      ],
       "externalPrerequisites": []
     },
     {
@@ -30,7 +35,9 @@
       "prs": [
         2
       ],
-      "dependsOn": [],
+      "dependsOn": [
+        "SS-01"
+      ],
       "externalDependencies": [],
       "externalPrerequisites": []
     },
@@ -41,7 +48,9 @@
       "prs": [
         2
       ],
-      "dependsOn": [],
+      "dependsOn": [
+        "SS-02"
+      ],
       "externalDependencies": [],
       "externalPrerequisites": []
     },
@@ -52,7 +61,9 @@
       "prs": [
         2
       ],
-      "dependsOn": [],
+      "dependsOn": [
+        "SS-03"
+      ],
       "externalDependencies": [],
       "externalPrerequisites": []
     },
@@ -63,7 +74,9 @@
       "prs": [
         2
       ],
-      "dependsOn": [],
+      "dependsOn": [
+        "SS-04"
+      ],
       "externalDependencies": [],
       "externalPrerequisites": []
     },
@@ -74,7 +87,9 @@
       "prs": [
         2
       ],
-      "dependsOn": [],
+      "dependsOn": [
+        "SS-05"
+      ],
       "externalDependencies": [],
       "externalPrerequisites": []
     },
@@ -85,7 +100,9 @@
       "prs": [
         5
       ],
-      "dependsOn": [],
+      "dependsOn": [
+        "SS-06"
+      ],
       "externalDependencies": [],
       "externalPrerequisites": []
     },
@@ -96,7 +113,9 @@
       "prs": [
         6
       ],
-      "dependsOn": [],
+      "dependsOn": [
+        "SS-07"
+      ],
       "externalDependencies": [],
       "externalPrerequisites": []
     },
@@ -107,7 +126,9 @@
       "prs": [
         8
       ],
-      "dependsOn": [],
+      "dependsOn": [
+        "SS-08"
+      ],
       "externalDependencies": [],
       "externalPrerequisites": []
     },
@@ -118,7 +139,9 @@
       "prs": [
         10
       ],
-      "dependsOn": [],
+      "dependsOn": [
+        "SS-09"
+      ],
       "externalDependencies": [],
       "externalPrerequisites": []
     },
@@ -129,8 +152,15 @@
       "prs": [
         3
       ],
-      "dependsOn": [],
-      "externalDependencies": [],
+      "dependsOn": [
+        "SS-06"
+      ],
+      "externalDependencies": [
+        {
+          "repository": "Galinsky-Arts/Distributed-Audio-Engine",
+          "unitId": "DAE-12"
+        }
+      ],
       "externalPrerequisites": []
     },
     {
@@ -140,7 +170,9 @@
       "prs": [
         12
       ],
-      "dependsOn": [],
+      "dependsOn": [
+        "SS-11"
+      ],
       "externalDependencies": [],
       "externalPrerequisites": []
     },
@@ -151,7 +183,9 @@
       "prs": [
         3
       ],
-      "dependsOn": [],
+      "dependsOn": [
+        "SS-12"
+      ],
       "externalDependencies": [],
       "externalPrerequisites": []
     },
@@ -162,7 +196,9 @@
       "prs": [
         3
       ],
-      "dependsOn": [],
+      "dependsOn": [
+        "SS-13"
+      ],
       "externalDependencies": [],
       "externalPrerequisites": []
     },
@@ -170,9 +206,22 @@
       "id": "SS-15",
       "title": "Stem and composition ingestion",
       "origin": "original",
-      "prs": [],
-      "dependsOn": [],
-      "externalDependencies": [],
+      "prs": [
+        21
+      ],
+      "dependsOn": [
+        "SS-07"
+      ],
+      "externalDependencies": [
+        {
+          "repository": "Galinsky-Arts/Distributed-Audio-Engine",
+          "unitId": "DAE-06"
+        },
+        {
+          "repository": "Galinsky-Arts/Distributed-Audio-Engine",
+          "unitId": "DAE-24"
+        }
+      ],
       "externalPrerequisites": []
     },
     {
@@ -182,7 +231,9 @@
       "prs": [
         3
       ],
-      "dependsOn": [],
+      "dependsOn": [
+        "SS-15"
+      ],
       "externalDependencies": [],
       "externalPrerequisites": []
     },
@@ -193,7 +244,9 @@
       "prs": [
         3
       ],
-      "dependsOn": [],
+      "dependsOn": [
+        "SS-16"
+      ],
       "externalDependencies": [],
       "externalPrerequisites": []
     },
@@ -204,8 +257,17 @@
       "prs": [
         3
       ],
-      "dependsOn": [],
-      "externalDependencies": [],
+      "dependsOn": [
+        "SS-14",
+        "SS-16",
+        "SS-17"
+      ],
+      "externalDependencies": [
+        {
+          "repository": "Galinsky-Arts/Distributed-Audio-Engine",
+          "unitId": "DAE-25"
+        }
+      ],
       "externalPrerequisites": []
     },
     {
@@ -215,7 +277,9 @@
       "prs": [
         13
       ],
-      "dependsOn": [],
+      "dependsOn": [
+        "SS-18"
+      ],
       "externalDependencies": [],
       "externalPrerequisites": []
     },
@@ -226,7 +290,9 @@
       "prs": [
         3
       ],
-      "dependsOn": [],
+      "dependsOn": [
+        "SS-19"
+      ],
       "externalDependencies": [],
       "externalPrerequisites": []
     },
@@ -237,16 +303,28 @@
       "prs": [
         3
       ],
-      "dependsOn": [],
-      "externalDependencies": [],
+      "dependsOn": [
+        "SS-16",
+        "SS-20"
+      ],
+      "externalDependencies": [
+        {
+          "repository": "Galinsky-Arts/Distributed-Audio-Engine",
+          "unitId": "DAE-28"
+        }
+      ],
       "externalPrerequisites": []
     },
     {
       "id": "SS-22",
       "title": "Preprogrammed spatial automation",
       "origin": "original",
-      "prs": [],
-      "dependsOn": [],
+      "prs": [
+        22
+      ],
+      "dependsOn": [
+        "SS-21"
+      ],
       "externalDependencies": [],
       "externalPrerequisites": []
     },
@@ -254,8 +332,12 @@
       "id": "SS-23",
       "title": "Live scene control and operator handoff",
       "origin": "original",
-      "prs": [],
-      "dependsOn": [],
+      "prs": [
+        23
+      ],
+      "dependsOn": [
+        "SS-22"
+      ],
       "externalDependencies": [],
       "externalPrerequisites": []
     },
@@ -264,16 +346,34 @@
       "title": "Session contribution rewards",
       "origin": "original",
       "prs": [],
-      "dependsOn": [],
-      "externalDependencies": [],
-      "externalPrerequisites": []
+      "dependsOn": [
+        "SS-14"
+      ],
+      "externalDependencies": [
+        {
+          "repository": "Galinsky-Arts/Distributed-Audio-Engine",
+          "unitId": "DAE-14"
+        },
+        {
+          "repository": "Galinsky-Arts/Distributed-Audio-Engine",
+          "unitId": "DAE-16"
+        }
+      ],
+      "externalPrerequisites": [],
+      "contributingPrs": [
+        24
+      ]
     },
     {
       "id": "SS-25",
       "title": "Accessibility and equitable participation",
       "origin": "original",
-      "prs": [],
-      "dependsOn": [],
+      "prs": [
+        25
+      ],
+      "dependsOn": [
+        "SS-24"
+      ],
       "externalDependencies": [],
       "externalPrerequisites": []
     },
@@ -281,78 +381,371 @@
       "id": "SS-26",
       "title": "Acoustic monitoring and emergency controls",
       "origin": "original",
-      "prs": [
-        14
+      "prs": [],
+      "dependsOn": [
+        "SS-25"
       ],
-      "dependsOn": [],
       "externalDependencies": [],
-      "externalPrerequisites": []
+      "externalPrerequisites": [],
+      "contributingPrs": [
+        14
+      ]
     },
     {
       "id": "SS-27",
       "title": "Weather, access and site operations",
       "origin": "original",
       "prs": [],
-      "dependsOn": [],
+      "dependsOn": [
+        "SS-26"
+      ],
       "externalDependencies": [],
-      "externalPrerequisites": []
+      "externalPrerequisites": [],
+      "contributingPrs": [
+        27
+      ]
     },
     {
       "id": "SS-28",
       "title": "Optional live-performance audio",
       "origin": "original",
       "prs": [],
-      "dependsOn": [],
+      "dependsOn": [
+        "SS-27"
+      ],
       "externalDependencies": [],
-      "externalPrerequisites": []
+      "externalPrerequisites": [],
+      "contributingPrs": [
+        28
+      ]
     },
     {
       "id": "SS-29",
       "title": "Session settlement and impact reporting",
       "origin": "original",
       "prs": [],
-      "dependsOn": [],
+      "dependsOn": [
+        "SS-28"
+      ],
       "externalDependencies": [],
-      "externalPrerequisites": []
+      "externalPrerequisites": [],
+      "contributingPrs": [
+        29
+      ]
     },
     {
       "id": "SS-30",
-      "title": "Controlled 10–20-speaker pilot",
+      "title": "Controlled 10\u201320-speaker pilot",
       "origin": "original",
       "prs": [],
-      "dependsOn": [],
+      "dependsOn": [
+        "SS-29"
+      ],
       "externalDependencies": [],
-      "externalPrerequisites": []
+      "externalPrerequisites": [
+        "Actual authorized 10\u201320-speaker field pilot with attributable consent, calibration, emergency-stop and acoustic results."
+      ],
+      "contributingPrs": [
+        30
+      ]
     },
     {
       "id": "SS-31",
       "title": "Larger deployment qualification",
       "origin": "original",
       "prs": [],
-      "dependsOn": [],
+      "dependsOn": [
+        "SS-30"
+      ],
       "externalDependencies": [],
-      "externalPrerequisites": []
+      "externalPrerequisites": [
+        "Actual authorized 10\u201320-speaker field pilot with attributable consent, calibration, emergency-stop and acoustic results.",
+        "Actual staged larger-scale qualification and published supported-device limits."
+      ]
     },
     {
       "id": "SS-32",
       "title": "Public release and producer runbooks",
       "origin": "original",
       "prs": [],
-      "dependsOn": [],
+      "dependsOn": [
+        "SS-31"
+      ],
       "externalDependencies": [],
-      "externalPrerequisites": []
+      "externalPrerequisites": [
+        "Actual authorized 10\u201320-speaker field pilot with attributable consent, calibration, emergency-stop and acoustic results.",
+        "Verified operational identity/E2EE channels, native outputs, provider integration and owner-approved site-specific release evidence."
+      ],
+      "contributingPrs": [
+        31
+      ]
     }
   ],
   "pullRequests": [
     {
+      "id": 5232152905,
+      "number": 33,
+      "title": "Clean obsolete build outputs and cancel pending auditions immediately",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/33",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-11-09T22:21:07Z",
+      "updatedAt": "2026-11-09T22:21:43Z",
+      "closedAt": "2026-11-09T22:21:43Z",
+      "mergedAt": "2026-11-09T22:21:43Z",
+      "headSha": "7714424c52be86e1446e85b74630c29c87f391dd",
+      "baseRef": "main",
+      "mergeCommitSha": "e84cc010793c4577be669f187c58a7d2d98694fe"
+    },
+    {
+      "id": 5232097815,
+      "number": 32,
+      "title": "Fix dependency audit and verify current audio-core integration",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/32",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-11-09T22:16:30Z",
+      "updatedAt": "2026-11-09T22:18:50Z",
+      "closedAt": "2026-11-09T22:18:50Z",
+      "mergedAt": "2026-11-09T22:18:50Z",
+      "headSha": "5315489ecfd4d8368f31ac10910bc3d12a465675",
+      "baseRef": "main",
+      "mergeCommitSha": "18971d05ba0a25865430a8e5a205360fe0b45237"
+    },
+    {
+      "id": 5110240533,
+      "number": 31,
+      "title": "SS-32: Public release and producer runbooks",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/31",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-11-01T18:24:31Z",
+      "updatedAt": "2026-11-09T22:26:37Z",
+      "closedAt": "2026-11-09T22:26:37Z",
+      "mergedAt": "2026-11-09T22:26:37Z",
+      "headSha": "072d2628e8604fb7c86995213d0f4a2d46ba80ae",
+      "baseRef": "main",
+      "mergeCommitSha": "c4a6e29050b82fb66ea3425efefd6cff26c5db31"
+    },
+    {
+      "id": 5110225918,
+      "number": 30,
+      "title": "SS-30: Controlled 10\u201320-speaker pilot",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/30",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-11-01T18:22:50Z",
+      "updatedAt": "2026-11-09T22:26:23Z",
+      "closedAt": "2026-11-09T22:26:23Z",
+      "mergedAt": "2026-11-09T22:26:23Z",
+      "headSha": "16891d02ac5635463f9894b0cde49847f2530d5c",
+      "baseRef": "main",
+      "mergeCommitSha": "94084e517c1c2d46567603abc84ed69813c8e8d1"
+    },
+    {
+      "id": 5110207465,
+      "number": 29,
+      "title": "SS-29: Session settlement and impact reporting",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/29",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-11-01T18:20:40Z",
+      "updatedAt": "2026-11-09T22:26:08Z",
+      "closedAt": "2026-11-09T22:26:08Z",
+      "mergedAt": "2026-11-09T22:26:08Z",
+      "headSha": "d9672dc72e6b43d2031105bff99a33f0e36f5b91",
+      "baseRef": "main",
+      "mergeCommitSha": "50568fd9fc7a303e890ec2dfbdfd71cfe36668dc"
+    },
+    {
+      "id": 5110174253,
+      "number": 28,
+      "title": "SS-28: Optional live-performance audio",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/28",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-11-01T18:16:57Z",
+      "updatedAt": "2026-11-09T22:25:53Z",
+      "closedAt": "2026-11-09T22:25:53Z",
+      "mergedAt": "2026-11-09T22:25:53Z",
+      "headSha": "bd860f76a879f39dee7e9418f684203cee2ec071",
+      "baseRef": "main",
+      "mergeCommitSha": "22738e9eb9c83bd3b73a393158863357ce9eb24b"
+    },
+    {
+      "id": 5110156347,
+      "number": 27,
+      "title": "SS-27: Weather, access and site operations",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/27",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-11-01T18:14:51Z",
+      "updatedAt": "2026-11-09T22:25:39Z",
+      "closedAt": "2026-11-09T22:25:39Z",
+      "mergedAt": "2026-11-09T22:25:39Z",
+      "headSha": "2f0832ff4f27fc7c88ddaf5a5c52bdb2ae3ee7d7",
+      "baseRef": "main",
+      "mergeCommitSha": "1794296718dc41ecbd281d393c62204ed545de40"
+    },
+    {
+      "id": 4941650927,
+      "number": 26,
+      "title": "Integrate Development Deployment Monitor (inventory-only)",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/26",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-10-20T19:57:50Z",
+      "updatedAt": "2026-10-20T20:02:20Z",
+      "closedAt": "2026-10-20T20:02:20Z",
+      "mergedAt": "2026-10-20T20:02:20Z",
+      "headSha": "9ed3cd39b084feaa2f9e8ea75dbb54a5a54136de",
+      "baseRef": "main",
+      "mergeCommitSha": "9c8ee89110c806add762c6cb73ff95ee609d6202"
+    },
+    {
+      "id": 4925812535,
+      "number": 25,
+      "title": "SS-25: Accessibility and equitable participation",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/25",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-10-19T18:52:41Z",
+      "updatedAt": "2026-11-09T22:25:14Z",
+      "closedAt": "2026-11-09T22:25:14Z",
+      "mergedAt": "2026-11-09T22:25:14Z",
+      "headSha": "9bb35be42b823e7beead4b14fc0a632a4d0e54d2",
+      "baseRef": "main",
+      "mergeCommitSha": "8176dc2c0584f6a36e8c056cad29b849d02cddb6"
+    },
+    {
+      "id": 4925760475,
+      "number": 24,
+      "title": "SS-24: Session contribution rewards",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/24",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-10-19T18:48:13Z",
+      "updatedAt": "2026-11-09T22:25:00Z",
+      "closedAt": "2026-11-09T22:25:00Z",
+      "mergedAt": "2026-11-09T22:25:00Z",
+      "headSha": "f22d419fae8daf59c453319e636ac1745487bd84",
+      "baseRef": "main",
+      "mergeCommitSha": "c50429f4506323cf01723522d7dfe7fae1c25076"
+    },
+    {
+      "id": 4925688634,
+      "number": 23,
+      "title": "SS-23: Live scene control and operator handoff",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/23",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-10-19T18:42:10Z",
+      "updatedAt": "2026-11-09T22:24:46Z",
+      "closedAt": "2026-11-09T22:24:46Z",
+      "mergedAt": "2026-11-09T22:24:46Z",
+      "headSha": "e1755741d7591f45de4615c82af7ee14ffcf5d7a",
+      "baseRef": "main",
+      "mergeCommitSha": "9db7d3e90a63e61beeae177a3f1148150a8b5a36"
+    },
+    {
+      "id": 4913247692,
+      "number": 22,
+      "title": "SS-22: Preprogrammed spatial automation",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/22",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-10-18T22:07:06Z",
+      "updatedAt": "2026-11-09T22:24:20Z",
+      "closedAt": "2026-11-09T22:24:19Z",
+      "mergedAt": "2026-11-09T22:24:19Z",
+      "headSha": "4b92f833872e1a6f1f6b17df67db1cad7771ce91",
+      "baseRef": "main",
+      "mergeCommitSha": "b0737c663468d837c666e09196442201b81ac8fb"
+    },
+    {
+      "id": 4913230312,
+      "number": 21,
+      "title": "SS-15: Stem and composition ingestion",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/21",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-10-18T22:04:55Z",
+      "updatedAt": "2026-10-19T18:30:31Z",
+      "closedAt": "2026-10-19T18:30:31Z",
+      "mergedAt": "2026-10-19T18:30:30Z",
+      "headSha": "d1d1b20c91cccc11ab8125590e49d6984af8aad0",
+      "baseRef": "main",
+      "mergeCommitSha": "8753a8457b16bfa593bd3153fe1190cf423d27cd"
+    },
+    {
+      "id": 4848589644,
+      "number": 20,
+      "title": "Standardize canonical PR registry for Boardroom and Engine Room",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/20",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-10-13T19:47:02Z",
+      "updatedAt": "2026-10-16T15:23:29Z",
+      "closedAt": "2026-10-16T15:23:29Z",
+      "mergedAt": "2026-10-16T15:23:29Z",
+      "headSha": "158cc368e1c9347ab6c8c6cc24edaee82bf42a78",
+      "baseRef": "main",
+      "mergeCommitSha": "1edbfdd732536712729ec34079fd8f64b91b6900"
+    },
+    {
+      "id": 4848082454,
+      "number": 19,
+      "title": "Owner policy: proceed with AI security review; defer external audit",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/19",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-10-13T19:02:36Z",
+      "updatedAt": "2026-10-13T20:30:43Z",
+      "closedAt": "2026-10-13T20:30:43Z",
+      "mergedAt": "2026-10-13T20:30:43Z",
+      "headSha": "2d31f90e960537031582fb81dfa8d1db28fa096f",
+      "baseRef": "main",
+      "mergeCommitSha": "909086912c87142a4b6d351ccf1d280667da2ca1"
+    },
+    {
+      "id": 4832039797,
+      "number": 18,
+      "title": "Port complete SceneSignal CI and planning verification to CircleCI",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/18",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-10-12T16:11:47Z",
+      "updatedAt": "2026-11-09T22:28:11Z",
+      "closedAt": "2026-11-09T22:28:10Z",
+      "mergedAt": null,
+      "headSha": "22e77869e4f92f0240705bc514f95da3c86c22e0",
+      "baseRef": "main",
+      "mergeCommitSha": "e74d4fbb591d31e93ff6abc40c8505053edd8b4a"
+    },
+    {
+      "id": 4830261141,
+      "number": 17,
+      "title": "Track E2EESA implementation, full testing and independent expert review",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/17",
+      "state": "open",
+      "draft": false,
+      "createdAt": "2026-10-12T13:41:49Z",
+      "updatedAt": "2026-10-12T14:34:05Z",
+      "closedAt": null,
+      "mergedAt": null,
+      "headSha": "8ea3bda44b8a05cfc2fbc374700009b008399b17",
+      "baseRef": "main",
+      "mergeCommitSha": "5881442cdd476af3cb2b490ac385b20294d230e2"
+    },
+    {
       "id": 4807543405,
       "number": 16,
       "title": "Automatically merge fresh green owner PRs without bypassing reviews or field gates",
-      "url": "https://github.com/neophilism/SceneSignal/pull/16",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/16",
       "state": "open",
       "draft": false,
-      "createdAt": "2026-10-10T01:04:43.000Z",
-      "updatedAt": "2026-10-10T01:04:43.000Z",
+      "createdAt": "2026-10-10T01:04:43Z",
+      "updatedAt": "2026-10-10T01:04:43Z",
       "closedAt": null,
       "mergedAt": null,
       "headSha": "76ccefddda4ea34c4c7fa97107d66e01ac7ac7be",
@@ -363,58 +756,58 @@
       "id": 4807512619,
       "number": 15,
       "title": "Deploy draft-only SceneSignal preview via GitHub Pages without Render",
-      "url": "https://github.com/neophilism/SceneSignal/pull/15",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/15",
       "state": "open",
       "draft": false,
-      "createdAt": "2026-10-10T01:00:27.000Z",
-      "updatedAt": "2026-10-10T01:00:27.000Z",
+      "createdAt": "2026-10-10T01:00:27Z",
+      "updatedAt": "2026-10-10T01:00:27Z",
       "closedAt": null,
       "mergedAt": null,
       "headSha": "fa54656331e25241a3b23ff91aad8941f81acfbc",
       "baseRef": "main",
-      "mergeCommitSha": "613d37860f9790f79b843b42fe1037f4a8394752"
+      "mergeCommitSha": "2a05d2275f14b1d88f7b6727d6f69d2863db95a8"
     },
     {
       "id": 4807503009,
       "number": 14,
       "title": "SS-26: Add signed acoustic monitoring and persistent emergency-stop safety gates",
-      "url": "https://github.com/neophilism/SceneSignal/pull/14",
-      "state": "open",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/14",
+      "state": "closed",
       "draft": false,
-      "createdAt": "2026-10-10T00:58:59.000Z",
-      "updatedAt": "2026-10-10T00:58:59.000Z",
-      "closedAt": null,
-      "mergedAt": null,
-      "headSha": "d8177ce7ada944dbefe2801fbb86cb00292a539a",
+      "createdAt": "2026-10-10T00:58:59Z",
+      "updatedAt": "2026-11-09T22:25:25Z",
+      "closedAt": "2026-11-09T22:25:25Z",
+      "mergedAt": "2026-11-09T22:25:25Z",
+      "headSha": "a173ea226e494e48a337d08edf75ffb807697af3",
       "baseRef": "main",
-      "mergeCommitSha": null
+      "mergeCommitSha": "db37a967e3629ba4fd34b27df58ad561b88462b0"
     },
     {
       "id": 4807482093,
       "number": 13,
       "title": "SS-19: Fade speaker topology changes without routing to departed outputs",
-      "url": "https://github.com/neophilism/SceneSignal/pull/13",
-      "state": "open",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/13",
+      "state": "closed",
       "draft": false,
-      "createdAt": "2026-10-10T00:56:04.000Z",
-      "updatedAt": "2026-10-10T00:56:04.000Z",
-      "closedAt": null,
-      "mergedAt": null,
-      "headSha": "0ce7783941b55b6c5e3e54f6c7ef37b5b6e01cfb",
+      "createdAt": "2026-10-10T00:56:04Z",
+      "updatedAt": "2026-11-09T22:23:37Z",
+      "closedAt": "2026-11-09T22:23:37Z",
+      "mergedAt": "2026-11-09T22:23:36Z",
+      "headSha": "ec0acb322b03539829d5563cf548543e7b1b334f",
       "baseRef": "main",
-      "mergeCommitSha": null
+      "mergeCommitSha": "46e46772c4b2e392b4775e288a314439cd667501"
     },
     {
       "id": 4807471059,
       "number": 12,
       "title": "SS-12: Scope signed local ciphertext coordination to the authorized site",
-      "url": "https://github.com/neophilism/SceneSignal/pull/12",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/12",
       "state": "closed",
       "draft": false,
-      "createdAt": "2026-10-10T00:54:12.000Z",
-      "updatedAt": "2026-10-10T01:05:00.000Z",
-      "closedAt": "2026-10-10T01:05:00.000Z",
-      "mergedAt": "2026-10-10T01:05:00.000Z",
+      "createdAt": "2026-10-10T00:54:12Z",
+      "updatedAt": "2026-10-10T01:05:00Z",
+      "closedAt": "2026-10-10T01:05:00Z",
+      "mergedAt": "2026-10-10T01:05:00Z",
       "headSha": "f5a42a7a7569dc2fef3dd9277566da29cf415c0f",
       "baseRef": "main",
       "mergeCommitSha": "208f035e8ec5eda19a7493ad3f394f6da6b88444"
@@ -423,28 +816,28 @@
       "id": 4807458407,
       "number": 11,
       "title": "Add signed CI candidate telemetry to Engine Room (opt-in, fail-closed)",
-      "url": "https://github.com/neophilism/SceneSignal/pull/11",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/11",
       "state": "open",
       "draft": false,
-      "createdAt": "2026-10-10T00:52:07.000Z",
-      "updatedAt": "2026-10-10T01:06:09.000Z",
+      "createdAt": "2026-10-10T00:52:07Z",
+      "updatedAt": "2026-10-10T01:06:09Z",
       "closedAt": null,
       "mergedAt": null,
       "headSha": "2fd5753590f4b9e4bce9657ecb076c3e1c6d1e0c",
       "baseRef": "main",
-      "mergeCommitSha": "3344cc292f24f58ab7618ece8cbe93b705b4853f"
+      "mergeCommitSha": "c8abd2d46a94dfabe8e444f6dd11eb4af761edd1"
     },
     {
       "id": 4807453990,
       "number": 10,
       "title": "SS-10: Whole-album and voluntary support payment-intent kernel",
-      "url": "https://github.com/neophilism/SceneSignal/pull/10",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/10",
       "state": "closed",
       "draft": false,
-      "createdAt": "2026-10-10T00:51:14.000Z",
-      "updatedAt": "2026-10-11T06:15:48.000Z",
-      "closedAt": "2026-10-11T06:15:48.000Z",
-      "mergedAt": "2026-10-11T06:15:48.000Z",
+      "createdAt": "2026-10-10T00:51:14Z",
+      "updatedAt": "2026-10-11T06:15:48Z",
+      "closedAt": "2026-10-11T06:15:48Z",
+      "mergedAt": "2026-10-11T06:15:48Z",
       "headSha": "00ce61bd9a51071a747ef3dbf1c7db33837bf2e9",
       "baseRef": "main",
       "mergeCommitSha": "7a9d59e18f762eff1e52545787a33d8efeea0016"
@@ -453,13 +846,13 @@
       "id": 4807440617,
       "number": 9,
       "title": "Prepare verified Render deployment for SceneSignal's public draft workspace",
-      "url": "https://github.com/neophilism/SceneSignal/pull/9",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/9",
       "state": "closed",
       "draft": false,
-      "createdAt": "2026-10-10T00:48:59.000Z",
-      "updatedAt": "2026-10-10T00:57:11.000Z",
-      "closedAt": "2026-10-10T00:57:11.000Z",
-      "mergedAt": "2026-10-10T00:57:11.000Z",
+      "createdAt": "2026-10-10T00:48:59Z",
+      "updatedAt": "2026-10-10T00:57:11Z",
+      "closedAt": "2026-10-10T00:57:11Z",
+      "mergedAt": "2026-10-10T00:57:11Z",
       "headSha": "4968620e04c87ffdb6db5efd56e1ce6403fbc1b8",
       "baseRef": "main",
       "mergeCommitSha": "c8b3bde8c711f5649b3f9a17b78d0f938b2c630a"
@@ -468,13 +861,13 @@
       "id": 4807435615,
       "number": 8,
       "title": "SS-09: Private sponsor commitments and consented public credits",
-      "url": "https://github.com/neophilism/SceneSignal/pull/8",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/8",
       "state": "closed",
       "draft": false,
-      "createdAt": "2026-10-10T00:48:07.000Z",
-      "updatedAt": "2026-10-10T00:54:29.000Z",
-      "closedAt": "2026-10-10T00:54:28.000Z",
-      "mergedAt": "2026-10-10T00:54:28.000Z",
+      "createdAt": "2026-10-10T00:48:07Z",
+      "updatedAt": "2026-10-10T00:54:29Z",
+      "closedAt": "2026-10-10T00:54:28Z",
+      "mergedAt": "2026-10-10T00:54:28Z",
       "headSha": "c867823b6d18fc45c81b6bb46b5295e82efa6476",
       "baseRef": "main",
       "mergeCommitSha": "8d2c4709c70cad0a828106a1ba474eb347979ac0"
@@ -483,13 +876,13 @@
       "id": 4807432848,
       "number": 7,
       "title": "Register SceneSignal's approved delivery plan for Engine Room monitoring",
-      "url": "https://github.com/neophilism/SceneSignal/pull/7",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/7",
       "state": "closed",
       "draft": false,
-      "createdAt": "2026-10-10T00:47:35.000Z",
-      "updatedAt": "2026-10-10T00:49:11.000Z",
-      "closedAt": "2026-10-10T00:49:11.000Z",
-      "mergedAt": "2026-10-10T00:49:11.000Z",
+      "createdAt": "2026-10-10T00:47:35Z",
+      "updatedAt": "2026-10-10T00:49:11Z",
+      "closedAt": "2026-10-10T00:49:11Z",
+      "mergedAt": "2026-10-10T00:49:11Z",
       "headSha": "d7b6cca9047d94f4731f90b832043ed163147fa0",
       "baseRef": "main",
       "mergeCommitSha": "5492f5d25220121c9a0eb63ba4fa3340f2d37fc3"
@@ -498,13 +891,13 @@
       "id": 4807427487,
       "number": 6,
       "title": "SS-08: Role-gated public session discovery with private-field minimization",
-      "url": "https://github.com/neophilism/SceneSignal/pull/6",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/6",
       "state": "closed",
       "draft": false,
-      "createdAt": "2026-10-10T00:46:42.000Z",
-      "updatedAt": "2026-10-10T00:47:26.000Z",
-      "closedAt": "2026-10-10T00:47:26.000Z",
-      "mergedAt": "2026-10-10T00:47:26.000Z",
+      "createdAt": "2026-10-10T00:46:42Z",
+      "updatedAt": "2026-10-10T00:47:26Z",
+      "closedAt": "2026-10-10T00:47:26Z",
+      "mergedAt": "2026-10-10T00:47:26Z",
       "headSha": "7a18aaaad81163a59a16a3310f11d09b2cbb4b88",
       "baseRef": "main",
       "mergeCommitSha": "52b992d8a876bff67ff2430c7c43a8e927614865"
@@ -513,13 +906,13 @@
       "id": 4807421186,
       "number": 5,
       "title": "SS-07: Secure artist calls, performer applications and lineup agreements",
-      "url": "https://github.com/neophilism/SceneSignal/pull/5",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/5",
       "state": "closed",
       "draft": false,
-      "createdAt": "2026-10-10T00:45:33.000Z",
-      "updatedAt": "2026-10-10T00:46:01.000Z",
-      "closedAt": "2026-10-10T00:46:00.000Z",
-      "mergedAt": "2026-10-10T00:46:00.000Z",
+      "createdAt": "2026-10-10T00:45:33Z",
+      "updatedAt": "2026-10-10T00:46:01Z",
+      "closedAt": "2026-10-10T00:46:00Z",
+      "mergedAt": "2026-10-10T00:46:00Z",
       "headSha": "bcafaf546c8e9456ec15fc1888fd549752b3ba8a",
       "baseRef": "main",
       "mergeCommitSha": "5125895045d79d6854247b629a7c8b6dc80177ec"
@@ -528,13 +921,13 @@
       "id": 4806858266,
       "number": 4,
       "title": "Build session planning, stem placement and spatial audition workspace",
-      "url": "https://github.com/neophilism/SceneSignal/pull/4",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/4",
       "state": "closed",
       "draft": false,
-      "createdAt": "2026-10-09T23:13:49.000Z",
-      "updatedAt": "2026-10-09T23:23:17.000Z",
-      "closedAt": "2026-10-09T23:23:16.000Z",
-      "mergedAt": "2026-10-09T23:23:16.000Z",
+      "createdAt": "2026-10-09T23:13:49Z",
+      "updatedAt": "2026-10-09T23:23:17Z",
+      "closedAt": "2026-10-09T23:23:16Z",
+      "mergedAt": "2026-10-09T23:23:16Z",
       "headSha": "d7bcc055f8858270f7da2ce3135e686ed5e72887",
       "baseRef": "main",
       "mergeCommitSha": "76aff93bec510d300bf8d9f839f5623e0210b949"
@@ -543,13 +936,13 @@
       "id": 4806764846,
       "number": 3,
       "title": "Add speaker consent, Spime tracking and endpoint-encrypted permit uploads",
-      "url": "https://github.com/neophilism/SceneSignal/pull/3",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/3",
       "state": "closed",
       "draft": false,
-      "createdAt": "2026-10-09T22:59:28.000Z",
-      "updatedAt": "2026-10-09T23:05:28.000Z",
-      "closedAt": "2026-10-09T23:05:28.000Z",
-      "mergedAt": "2026-10-09T23:05:27.000Z",
+      "createdAt": "2026-10-09T22:59:28Z",
+      "updatedAt": "2026-10-09T23:05:28Z",
+      "closedAt": "2026-10-09T23:05:28Z",
+      "mergedAt": "2026-10-09T23:05:27Z",
       "headSha": "ced8e9b6437e4e8fabdd1f7b568c1b26b551018e",
       "baseRef": "main",
       "mergeCommitSha": "7559f259887506851ca2289d7440cb518af3e9cc"
@@ -558,13 +951,13 @@
       "id": 4806711445,
       "number": 2,
       "title": "Build scoped session planning and signed site authorization",
-      "url": "https://github.com/neophilism/SceneSignal/pull/2",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/2",
       "state": "closed",
       "draft": false,
-      "createdAt": "2026-10-09T22:52:05.000Z",
-      "updatedAt": "2026-10-09T22:57:23.000Z",
-      "closedAt": "2026-10-09T22:57:22.000Z",
-      "mergedAt": "2026-10-09T22:57:22.000Z",
+      "createdAt": "2026-10-09T22:52:05Z",
+      "updatedAt": "2026-10-09T22:57:23Z",
+      "closedAt": "2026-10-09T22:57:22Z",
+      "mergedAt": "2026-10-09T22:57:22Z",
       "headSha": "245fc2c24cf12d877c6f99ddffd35f0db0f44d3b",
       "baseRef": "main",
       "mergeCommitSha": "fb5d46d8d5b7169e1ac0942848928f30ac4993f6"
@@ -573,13 +966,13 @@
       "id": 4805775235,
       "number": 1,
       "title": "SceneSignal: specification, E2EESA policy and revised development plan",
-      "url": "https://github.com/neophilism/SceneSignal/pull/1",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/1",
       "state": "closed",
       "draft": false,
-      "createdAt": "2026-10-09T20:56:13.000Z",
-      "updatedAt": "2026-10-09T20:58:59.000Z",
-      "closedAt": "2026-10-09T20:58:59.000Z",
-      "mergedAt": "2026-10-09T20:58:59.000Z",
+      "createdAt": "2026-10-09T20:56:13Z",
+      "updatedAt": "2026-10-09T20:58:59Z",
+      "closedAt": "2026-10-09T20:58:59Z",
+      "mergedAt": "2026-10-09T20:58:59Z",
       "headSha": "a0611b6aea1fb6a4467648673543fec4e79b6df6",
       "baseRef": "main",
       "mergeCommitSha": "45db973007327b4ef76dfc9edf97a69f740d37b2"

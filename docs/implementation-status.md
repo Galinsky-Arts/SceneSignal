@@ -1,5 +1,17 @@
 # SceneSignal implementation and evidence
 
+## Integrated source checkpoint — November 9, 2026
+
+PRs #13, #14 and #22–#25/#27–#33 are merged. The integrated source passes 123
+application tests and the production Chromium draft-workflow smoke test. The
+[delivery verification record](delivery-verification-2026-11-09.md) distinguishes
+the exact software checks from operational and physical acceptance still needed.
+The canonical registry restores the dependency graph and retains partial evidence
+as contributions rather than treating those merges as completed field milestones.
+
+The earlier checkpoint below describes historical foundations, not the current
+test count or a statement that all later source work is still absent.
+
 ## Dependency verification — November 9, 2026
 
 The audio dependency now pins `Galinsky-Arts/Distributed-Audio-Engine` at
