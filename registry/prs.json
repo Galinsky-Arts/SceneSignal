@@ -10,7 +10,7 @@
   "scopeNote": "Units filtered by this repository prefix from the multi-repository shared roadmap. Other repository units are not counted here.",
   "schemaVersion": 1,
   "roadmapVersion": 2,
-  "observedAt": "2026-11-09T22:28:12.434Z",
+  "observedAt": "2026-11-09T23:47:29.478Z",
   "units": [
     {
       "id": "SS-01",
@@ -33,7 +33,8 @@
       "title": "Organizer and collaborator roles",
       "origin": "original",
       "prs": [
-        2
+        2,
+        37
       ],
       "dependsOn": [
         "SS-01"
@@ -161,7 +162,10 @@
           "unitId": "DAE-12"
         }
       ],
-      "externalPrerequisites": []
+      "externalPrerequisites": [],
+      "contributingPrs": [
+        36
+      ]
     },
     {
       "id": "SS-12",
@@ -200,7 +204,10 @@
         "SS-13"
       ],
       "externalDependencies": [],
-      "externalPrerequisites": []
+      "externalPrerequisites": [],
+      "contributingPrs": [
+        36
+      ]
     },
     {
       "id": "SS-15",
@@ -268,7 +275,10 @@
           "unitId": "DAE-25"
         }
       ],
-      "externalPrerequisites": []
+      "externalPrerequisites": [],
+      "contributingPrs": [
+        36
+      ]
     },
     {
       "id": "SS-19",
@@ -281,7 +291,10 @@
         "SS-18"
       ],
       "externalDependencies": [],
-      "externalPrerequisites": []
+      "externalPrerequisites": [],
+      "contributingPrs": [
+        36
+      ]
     },
     {
       "id": "SS-20",
@@ -294,7 +307,10 @@
         "SS-19"
       ],
       "externalDependencies": [],
-      "externalPrerequisites": []
+      "externalPrerequisites": [],
+      "contributingPrs": [
+        36
+      ]
     },
     {
       "id": "SS-21",
@@ -361,7 +377,8 @@
       ],
       "externalPrerequisites": [],
       "contributingPrs": [
-        24
+        24,
+        35
       ]
     },
     {
@@ -388,7 +405,8 @@
       "externalDependencies": [],
       "externalPrerequisites": [],
       "contributingPrs": [
-        14
+        14,
+        36
       ]
     },
     {
@@ -416,7 +434,8 @@
       "externalDependencies": [],
       "externalPrerequisites": [],
       "contributingPrs": [
-        28
+        28,
+        36
       ]
     },
     {
@@ -477,11 +496,89 @@
         "Verified operational identity/E2EE channels, native outputs, provider integration and owner-approved site-specific release evidence."
       ],
       "contributingPrs": [
-        31
+        31,
+        36,
+        37,
+        38
       ]
     }
   ],
   "pullRequests": [
+    {
+      "id": 5233081206,
+      "number": 38,
+      "title": "Prepare account-enabled Render preview within zero-cost budget",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/38",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-11-09T23:43:44Z",
+      "updatedAt": "2026-11-09T23:46:30Z",
+      "closedAt": "2026-11-09T23:46:30Z",
+      "mergedAt": "2026-11-09T23:46:30Z",
+      "headSha": "d7d986c295be56c5ae9aafcd9d4ad1811a8ee2f5",
+      "baseRef": "main",
+      "mergeCommitSha": "685bd7276f5b33e426e0d5a1625ca4e4ec53f310"
+    },
+    {
+      "id": 5233048757,
+      "number": 37,
+      "title": "Add real accounts, session ownership and scoped collaborator access",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/37",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-11-09T23:40:25Z",
+      "updatedAt": "2026-11-09T23:41:42Z",
+      "closedAt": "2026-11-09T23:41:42Z",
+      "mergedAt": "2026-11-09T23:41:41Z",
+      "headSha": "8bb75d50d5770b6df9fede2f0f2b2f889276e3ac",
+      "baseRef": "main",
+      "mergeCommitSha": "ecac1da8d710e97957e1b6af882128be5845e746"
+    },
+    {
+      "id": 5232547696,
+      "number": 36,
+      "title": "Bind SceneSignal authorization and contributor consent to native playback",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/36",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-11-09T22:54:28Z",
+      "updatedAt": "2026-11-09T22:55:58Z",
+      "closedAt": "2026-11-09T22:55:57Z",
+      "mergedAt": "2026-11-09T22:55:57Z",
+      "headSha": "b100655e569fdc5c3fbf94e856cc121ddec51a3b",
+      "baseRef": "main",
+      "mergeCommitSha": "f6005e574924f6bac10055a9e91df4026e1ce1e3"
+    },
+    {
+      "id": 5232280804,
+      "number": 35,
+      "title": "Require real PostgreSQL contribution concurrency and rollback tests",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/35",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-11-09T22:31:54Z",
+      "updatedAt": "2026-11-09T22:32:58Z",
+      "closedAt": "2026-11-09T22:32:58Z",
+      "mergedAt": "2026-11-09T22:32:58Z",
+      "headSha": "5d96fe703a2b5617bb8835ab1d91bfa7fa274ee8",
+      "baseRef": "main",
+      "mergeCommitSha": "d04bea30367e377c2694d76e15039e5c614f17bc"
+    },
+    {
+      "id": 5232242751,
+      "number": 34,
+      "title": "Restore SceneSignal dependency graph and verified delivery evidence",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/34",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-11-09T22:28:37Z",
+      "updatedAt": "2026-11-09T22:29:35Z",
+      "closedAt": "2026-11-09T22:29:35Z",
+      "mergedAt": "2026-11-09T22:29:35Z",
+      "headSha": "300898df6f57f1f07613dca9691dbd3c5dcbc358",
+      "baseRef": "main",
+      "mergeCommitSha": "1280afce1ce2d8f23be6a72aca3bc6a59c2d096b"
+    },
     {
       "id": 5232152905,
       "number": 33,
@@ -760,12 +857,12 @@
       "state": "open",
       "draft": false,
       "createdAt": "2026-10-10T01:00:27Z",
-      "updatedAt": "2026-10-10T01:00:27Z",
+      "updatedAt": "2026-11-09T22:56:02Z",
       "closedAt": null,
       "mergedAt": null,
-      "headSha": "fa54656331e25241a3b23ff91aad8941f81acfbc",
+      "headSha": "bcab5537cab38d939e46a05226a1418819a2dd5a",
       "baseRef": "main",
-      "mergeCommitSha": "2a05d2275f14b1d88f7b6727d6f69d2863db95a8"
+      "mergeCommitSha": "dcc54ef809815058061b5405d42b0b42db99b561"
     },
     {
       "id": 4807503009,
