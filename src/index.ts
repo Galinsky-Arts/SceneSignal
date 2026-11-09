@@ -10,3 +10,5 @@ export * from './composition-ingestion.js';
 export * from './speaker-transitions.js';
 export * from './spatial-automation.js';
 export * from './live-scene-control.js';
+export * from './session-contribution.js';
+export * from './postgres-contribution-store.js';
