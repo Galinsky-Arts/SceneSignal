@@ -1,5 +1,18 @@
 # SceneSignal implementation and evidence
 
+## Spatial program preparation checkpoint — November 9, 2026
+
+`prepareSceneOutput` now renders the authorized speaker mix and produces the core's
+actual encrypted media descriptor and compiled program. It retains all-speaker
+normalization and rechecks role, source rights, site/scene state and contributor
+consent after encryption. Ten focused cases and two added production-C cases
+verify the composition-to-encryption-to-native path. The application suite now
+has 156 cases and the separate production-C suite has ten. See the
+[preparation boundary and native handoff](spatial-program-preparation.md).
+
+This is bounded endpoint preparation, not a provisioned phone app, segmented
+publisher, authenticated recipient transport or physical/acoustic qualification.
+
 ## Deployment preparation checkpoint — November 9, 2026
 
 PR #37 merged the account service and PR #38 merged the Render account-enabled
