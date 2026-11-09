@@ -2,6 +2,7 @@ import { PlacementRegistry, validateScene, validatePosition, createMixPlan, appl
 import type { SpatialScene, SpatialSpeaker, Position, PositionObservation, MixPlan, Scope } from '@neophilism/distributed-audio-engine';
 import { requireSceneRole } from './session.js';
 import type { SceneActor, SceneSession } from './session.js';
+import type { SpatialAutomation } from './spatial-automation.js';
 
 export interface ContributorSpeaker {
   id: string; ownerId: string; outputId: string; consentUntilMs: number;
@@ -20,6 +21,8 @@ export class SpatialWorkspace {
   private readonly spimes = new Map<string, Spime>();
   private readonly placements = new PlacementRegistry({ maxAgeMs: 3000, maxUncertaintyMeters: 0.5, minConfidence: 0.9 });
   private readonly scope: Scope;
+  private lastAutomationAtMs = -1;
+  private activeAutomation: { timeline: SpatialAutomation; revision: number } | null = null;
   constructor(private readonly session: SceneSession, scene: SpatialScene, private readonly rightsAllowSource: (assetId: string, nowMs: number) => boolean) {
     validateScene(scene); this.scene = structuredClone(scene); this.scope = session.snapshot().scope;
   }
@@ -30,6 +33,47 @@ export class SpatialWorkspace {
     invariant(scene.sources.every(s => this.rightsAllowSource(s.assetId, nowMs) === true), 'SPATIAL_SOURCE_RIGHTS_DENIED');
     invariant([...this.spimes.values()].every(s => scene.sources.some(source => source.id === s.sourceId)), 'BOUND_SPIME_SOURCE_REMOVED');
     this.scene = structuredClone(scene);
+  }
+  /** Apply an admitted endpoint timeline through the same role, revision and rights checks as manual edits. */
+  applyAutomation(actor: SceneActor, automation: SpatialAutomation, nowMs: number): boolean {
+    requireSceneRole(actor, this.scope, ['organizer','operator'], nowMs);
+    integer(nowMs, this.lastAutomationAtMs + 1);
+    automation.assertScope(this.scope);
+    // Spime control is live positional authority: do not silently override it.
+    invariant(this.spimes.size === 0, 'SPIME_AUTOMATION_CONFLICT');
+    const sampled = automation.sample(nowMs);
+    if (!sampled) return false;
+    if (this.activeAutomation?.timeline === automation)
+      invariant(this.activeAutomation.revision === this.scene.revision,
+        'AUTOMATION_SUPERSEDED_BY_MANUAL_EDIT');
+    else invariant(sampled.revision === this.scene.revision,
+      'AUTOMATION_BASE_REVISION_CONFLICT');
+    if (sampled.id !== this.scene.id) {
+      // A distinct-scene boundary is allowed only after this same scoped,
+      // authorized timeline has been bound to the workspace in its old scene.
+      // A freshly substituted timeline may not replace private sources.
+      invariant(this.activeAutomation?.timeline === automation, 'AUTOMATION_SOURCE_CONFLICT');
+      validateScene(sampled);
+      invariant(sampled.sampleRate === this.scene.sampleRate &&
+        sampled.frames === this.scene.frames, 'SCENE_REVISION_OR_ALIGNMENT_CONFLICT');
+      invariant(sampled.sources.every(source =>
+        this.rightsAllowSource(source.assetId, nowMs) === true),
+        'SPATIAL_SOURCE_RIGHTS_DENIED');
+      // Do not interpolate source IDs, issue stale output commands, or
+      // bypass the independent renderer's playback authorization.
+      this.scene = structuredClone({...sampled, revision: this.scene.revision + 1});
+    } else {
+      invariant(sampled.sources.length === this.scene.sources.length &&
+        sampled.sources.every((source, index) =>
+          source.id === this.scene.sources[index]!.id &&
+          source.assetId === this.scene.sources[index]!.assetId &&
+          source.role === this.scene.sources[index]!.role),
+        'AUTOMATION_SOURCE_CONFLICT');
+      this.compose(actor, {...sampled, revision: this.scene.revision + 1}, nowMs);
+    }
+    this.lastAutomationAtMs = nowMs;
+    this.activeAutomation = { timeline: automation, revision: this.scene.revision };
+    return true;
   }
   joinSpeaker(actor: SceneActor, speaker: ContributorSpeaker, nowMs: number): void {
     integer(nowMs); identifier(actor.identityId); integer(actor.expiresAtMs, nowMs + 1);
