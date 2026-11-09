@@ -32,14 +32,15 @@
     "build": "node scripts/clean-build.mjs && tsc && vite build",
     "test": "npm run build && node --test dist/tests/*.test.js tests/*.test.mjs",
     "roadmap:check": "node scripts/check-roadmap.mjs",
-    "check": "npm run typecheck && npm run roadmap:check && npm run registry:check && npm test",
+    "check": "npm run core:check && npm run typecheck && npm run roadmap:check && npm run registry:check && npm test",
     "dev": "vite",
     "preview": "vite preview",
     "registry:check": "node scripts/validate-pr-registry.mjs && node --test registry/pr-contract.test.mjs",
     "test:postgres": "node --test tests/postgres-contribution.integration.mjs tests/account-service.integration.mjs",
     "test:native": "node scripts/test-native.mjs",
     "start": "node --env-file-if-exists=.env dist/server/main.js",
-    "db:migrate": "node --env-file-if-exists=.env dist/server/main.js --migrate"
+    "db:migrate": "node --env-file-if-exists=.env dist/server/main.js --migrate",
+    "core:check": "node scripts/check-core.mjs"
   },
   "dependencies": {
     "@neophilism/distributed-audio-engine": "file:.deps/audio-core.tgz",

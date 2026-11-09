@@ -1,1 +1,5 @@
-{ "repository": "Galinsky-Arts/Distributed-Audio-Engine", "commit": "b49fa569ea49663182bffdcef319ec48222c40c7", "package": "@neophilism/distributed-audio-engine" }
+{
+  "repository": "Galinsky-Arts/Distributed-Audio-Engine",
+  "commit": "532d28a7e479fe25428c315ba415c3722de7b84c",
+  "package": "@neophilism/distributed-audio-engine"
+}

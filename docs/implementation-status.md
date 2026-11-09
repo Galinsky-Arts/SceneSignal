@@ -1,5 +1,15 @@
 # SceneSignal implementation and evidence
 
+## Current dependency checkpoint — November 9, 2026
+
+The audio dependency is now pinned to `532d28a7e479fe25428c315ba415c3722de7b84c`
+after its seven hosted checks passed. Clean installation verifies the prepared
+archive against the lockfile and the prepared source against this exact pin.
+This prevents npm cache reuse from hiding a stale locked package after a source
+pin change. The application suite has 157 cases, plus four registry cases,
+14 real PostgreSQL/HTTP cases and ten production-C cases; the audit is clean.
+Earlier checkpoints below preserve their historical counts and pins.
+
 ## Spatial program preparation checkpoint — November 9, 2026
 
 `prepareSceneOutput` now renders the authorized speaker mix and produces the core's
