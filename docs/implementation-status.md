@@ -12,6 +12,11 @@ as contributions rather than treating those merges as completed field milestones
 The earlier checkpoint below describes historical foundations, not the current
 test count or a statement that all later source work is still absent.
 
+The contribution store additionally passes five real PostgreSQL 17 integration
+tests for concurrent deduplication, caps, rollback, reopened connections and
+tenant/session isolation. The required hosted workflow runs this suite separately
+from `npm run check`. No operational database or real contribution is claimed.
+
 ## Dependency verification — November 9, 2026
 
 The audio dependency now pins `Galinsky-Arts/Distributed-Audio-Engine` at
