@@ -1,4 +1,4 @@
-> **Canonical repository PR plan:** [`registry/roadmap.json`](../registry/roadmap.json). Historical original plan below; all additions and mapping updates now belong in the canonical registry.
+> **Canonical repository PR plan:** [`registry/prs.json`](../registry/prs.json). Historical original plan below; all additions and mapping updates now belong in the canonical registry.
 
 # SceneSignal: canonical development plan
 

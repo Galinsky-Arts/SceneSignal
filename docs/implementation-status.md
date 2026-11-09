@@ -1,5 +1,18 @@
 # SceneSignal implementation and evidence
 
+## Deployment preparation checkpoint — November 9, 2026
+
+PR #37 merged the account service and PR #38 merged the Render account-enabled
+preview configuration. The owner selected Phillip's Render workspace. The free
+PostgreSQL preview database is created; Blueprint planning succeeded at commit
+`685bd7276f5b33e426e0d5a1625ca4e4ec53f310`. Applying its reviewed resource plan
+is pending explicit Blueprint authorization; a plan is not a live deployment.
+The database expires December 9, 2026. See [the deployment runbook](render-preview.md).
+
+A second actual Chromium account context also exercised organizer-granted operator
+access, current access refresh and voluntary departure; PostgreSQL confirmed
+revocation. No private plan, media or key upload was needed.
+
 ## Account integration checkpoint — November 9, 2026
 
 The [account service and browser screens](account-service.md) now use real Better
