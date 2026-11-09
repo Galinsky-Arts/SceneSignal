@@ -1,4 +1,5 @@
 import './style.css';
+import { AccountUi } from './accounts.js';
 import { SceneSession, SpatialWorkspace, privateConditionsDigest, preparePrivateEvidence } from '../src/index.js';
 import type { SceneActor, ContributorSpeaker, PreparedEvidence } from '../src/index.js';
 import { decodeWave } from '@neophilism/distributed-audio-engine';
@@ -13,16 +14,21 @@ let workspace: SpatialWorkspace | undefined; let scene: SpatialScene | undefined
 let assetCounter = 0; let speakerCounter = 0;
 const stems = new Map<string, Float32Array>(); const names = new Map<string, string>();
 let audio: AudioContext | undefined;
-let auditionGeneration = 0; let preparedPermit: PreparedEvidence | undefined;
+let auditionGeneration = 0; let draftGeneration = 0; let planSaveGeneration = 0; let preparedPermit: PreparedEvidence | undefined;
+function newDraftSession(): SceneSession {
 const now = Date.now();
-session = new SceneSession(scope, { siteId: 'draft-site', revision: 1, conditionsDigestHex: '0'.repeat(64), startsAtMs: now + 3600000, endsAtMs: now + 7200000, maximumLinearGain: 0.3, publicSummary: 'A free community spatial music session' }, () => { auditionGeneration++; void audio?.close(); audio = undefined; });
+return new SceneSession(scope, { siteId: 'draft-site', revision: 1, conditionsDigestHex: '0'.repeat(64), startsAtMs: now + 3600000, endsAtMs: now + 7200000, maximumLinearGain: 0.3, publicSummary: 'A free community spatial music session' }, () => { auditionGeneration++; void audio?.close(); audio = undefined; });
+}
+session = newDraftSession();
 const escape = (value: unknown) => String(value).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]!));
 const localTime = (time: number) => { const d=new Date(time-Date.prototype.getTimezoneOffset.call(new Date(time))*60000);return d.toISOString().slice(0,16); };
-const tabs = ['Plan','Spatial scene','Contributors','Authorization','Reports'];
+const accountUi = new AccountUi(escape, next => { if (next) message = next; render(); }, discardPrivateDraft);
+const tabs = ['Plan','Spatial scene','Contributors','Authorization','Reports','Account'];
 function render(): void {
   const snapshot = session.snapshot(); const sources = workspace?.snapshot().scene.sources ?? [];
-  root.innerHTML = `<div class="shell"><aside><a class="brand" href="#"><span class="brand-mark" aria-hidden="true">◈</span>SceneSignal</a><p class="brand-note">Music belongs in a place.</p><nav aria-label="Workspace">${tabs.map(t=>`<button class="nav ${t===tab?'selected':''}" data-tab="${t}" ${t===tab?'aria-current="page"':''}>${t}</button>`).join('')}</nav><div class="draft-note"><span class="dot"></span>Local draft<p>Changes stay in this tab. Publish after organizer authorization.</p></div></aside><main><header><div><p class="eyebrow">COMMUNITY SPATIAL MUSIC</p><h1>${escape(tab==='Plan'?'Give the music a place.':tab)}</h1></div><span class="status">${snapshot.state==='cancelled'?'Cancelled':'Planning'}</span></header><p class="intro">${tab==='Plan'?'Plan a free session, arrange its instruments and invite people to contribute sound.':tab==='Spatial scene'?'Place instruments around your site. Upload aligned mono WAV stems to audition the mix.':tab==='Contributors'?'Keep speaker positions independent of their owners’ phones.':'Prepare the session together, with clear operating conditions.'}</p><div class="notice" role="status" aria-live="polite">${escape(message || 'Draft workspace · publishing and remote playback require a connected organizer account.')}</div>${tab==='Plan'?planView(snapshot.plan):tab==='Spatial scene'?sceneView(sources):tab==='Contributors'?speakersView():tab==='Authorization'?authorizationView():reportsView()}<footer>Free attendance. Voluntary speaker contribution. Complete albums.<span>Draft data produces no live reporting or contribution rewards.</span></footer></main></div>`;
+  root.innerHTML = `<div class="shell"><aside><a class="brand" href="#"><span class="brand-mark" aria-hidden="true">◈</span>SceneSignal</a><p class="brand-note">Music belongs in a place.</p><nav aria-label="Workspace">${tabs.map(t=>`<button class="nav ${t===tab?'selected':''}" data-tab="${t}" ${t===tab?'aria-current="page"':''}>${t}</button>`).join('')}</nav><div class="draft-note"><span class="dot"></span>Local draft<p>Changes stay in this tab. Publish after organizer authorization.</p></div></aside><main><header><div><p class="eyebrow">COMMUNITY SPATIAL MUSIC</p><h1>${escape(tab==='Plan'?'Give the music a place.':tab)}</h1></div><span class="status">${snapshot.state==='cancelled'?'Cancelled':'Planning'}</span></header><p class="intro">${tab==='Plan'?'Plan a free session, arrange its instruments and invite people to contribute sound.':tab==='Spatial scene'?'Place instruments around your site. Upload aligned mono WAV stems to audition the mix.':tab==='Contributors'?'Keep speaker positions independent of their owners’ phones.':'Prepare the session together, with clear operating conditions.'}</p><div class="notice" role="status" aria-live="polite">${escape(message || 'Draft workspace · publishing and remote playback require a connected organizer account.')}</div>${tab==='Plan'?planView(snapshot.plan):tab==='Spatial scene'?sceneView(sources):tab==='Contributors'?speakersView():tab==='Authorization'?authorizationView():tab==='Account'?accountUi.view():reportsView()}<footer>Free attendance. Voluntary speaker contribution. Complete albums.<span>Draft data produces no live reporting or contribution rewards.</span></footer></main></div>`;
   root.querySelectorAll<HTMLButtonElement>('[data-tab]').forEach(b=>b.addEventListener('click',()=>{tab=b.dataset.tab!;message='';render();}));
+  accountUi.bind(root);
   root.querySelector<HTMLFormElement>('#plan-form')?.addEventListener('submit',savePlan);
   root.querySelector<HTMLInputElement>('#stem-file')?.addEventListener('change',uploadStem);
   root.querySelector<HTMLFormElement>('#speaker-form')?.addEventListener('submit',addSpeaker);
@@ -43,27 +49,37 @@ function speakersView(): string {
   return `<section class="two-column"><section class="card"><p class="eyebrow">SPEAKER PLACEMENT</p><h2>A place for each contribution</h2><p>Draft placements help you audition coverage. A real contributor must consent and connect a supported output before session playback.</p><form id="speaker-form"><div class="field-pair"><label>X (m)<input name="x" type="number" min="-14" max="14" step="0.1" value="3" required></label><label>Y (m)<input name="y" type="number" min="-8" max="8" step="0.1" value="0" required></label></div><label>Contributor gain ceiling<input name="gain" type="number" min="0" max="1" step="0.01" value="0.2" required></label><button class="primary" type="submit" ${workspace?'':'disabled'}>Add draft speaker</button><p class="muted">Upload a stem first to create a composition.</p></form></section><section class="card"><h2>Draft contributors</h2>${speakers.length?speakers.map(s=>`<article class="list-row"><div><strong>${escape(s.id)}</strong><p>Fixed position · (${s.position.x}, ${s.position.y}) m</p><span class="pill">Draft · output unverified</span></div><div class="row-actions"><button data-audition="${s.id}">Audition mix</button><button data-remove-speaker="${s.id}">Remove</button></div></article>`).join(''):'<div class="empty"><h3>No speakers placed yet</h3><p>Try a draft position to hear its mix on this device.</p></div>'}</section></section>`;
 }
 function authorizationView(): string {
-  return `<section class="two-column"><section class="card"><p class="eyebrow">ORGANIZER AUTHORIZATION</p><h2>Make the operating conditions clear</h2><p>Before public activation, confirm the permit or the site-specific basis for a no-permit-required assertion. A change of site or conditions requires a fresh decision.</p><label class="file-button">Prepare private permit<input id="permit-file" type="file" accept="application/pdf,image/png,image/jpeg"></label>${preparedPermit?'<p class="pill">Private evidence prepared</p>':''}<p class="muted">The file is encrypted in this tab. Its key stays here until an authorized endpoint channel is connected.</p></section><section class="card warm"><h2>Activation requirements</h2><ul class="checklist"><li>Organizer account connected</li><li>Current site-specific authorization</li><li>Consented supported outputs</li><li>Current operating limits</li></ul><button class="primary" disabled>Activate session</button><p class="muted">This local draft cannot activate a public session.</p></section></section>`;
+  return `<section class="two-column"><section class="card"><p class="eyebrow">ORGANIZER AUTHORIZATION</p><h2>Make the operating conditions clear</h2><p>Before public activation, confirm the permit or the site-specific basis for a no-permit-required assertion. A change of site or conditions requires a fresh decision.</p><label class="file-button">Prepare private permit<input id="permit-file" type="file" accept="application/pdf,image/png,image/jpeg"></label>${preparedPermit?'<p class="pill">Private evidence prepared</p>':''}<p class="muted">The file is encrypted in this tab. Its key stays here until an authorized endpoint channel is connected.</p></section><section class="card warm"><h2>Activation requirements</h2><ul class="checklist"><li>${accountUi.signedIn()?'Account signed in; endpoint authorization still required':'Organizer account not connected'}</li><li>Current site-specific authorization</li><li>Consented supported outputs</li><li>Current operating limits</li></ul><button class="primary" disabled>Activate session</button><p class="muted">This local draft cannot activate a public session.</p></section></section>`;
 }
 function reportsView(): string { return `<section class="card empty"><p class="eyebrow">SESSION REPORTING</p><h2>Actual activity, when it happens</h2><p>Music plays, attendance entries, verified contributions, album sales and session rewards appear after a connected session reports them.</p><p>Use the label or family view in Music Operations to aggregate SceneSignal alongside TrackZero.</p><span class="pill">Awaiting connected session data</span></section>`; }
 async function savePlan(event: SubmitEvent): Promise<void> {
   event.preventDefault();
+  const generation = draftGeneration, saveGeneration = ++planSaveGeneration;
   // Revoke pending audition immediately, before asynchronous condition hashing.
   auditionGeneration++;const activeAudio=audio;audio=undefined;
   if(activeAudio)void activeAudio.close().catch(()=>{});
   const data=new FormData(event.currentTarget as HTMLFormElement);const startsAtMs=Date.parse(String(data.get('starts'))),endsAtMs=Date.parse(String(data.get('ends')));
-  try { const conditions=String(data.get('conditions'));const siteId=String(data.get('site'));const digest=await privateConditionsDigest({siteId,conditions,startsAtMs,endsAtMs});const previous=session.snapshot().plan;session.revise(actor,{...previous,siteId,revision:previous.revision+1,publicSummary:String(data.get('summary')),startsAtMs,endsAtMs,maximumLinearGain:Number(data.get('gain')),conditionsDigestHex:digest},Date.now());privateConditions=conditions;preparedPermit=undefined;message='Session plan saved in this tab. Authorization is required before activation.'; }
-  catch { message='Check the site reference, time range and gain ceiling.'; } render();
+  try { const conditions=String(data.get('conditions'));const siteId=String(data.get('site'));const digest=await privateConditionsDigest({siteId,conditions,startsAtMs,endsAtMs});if(generation!==draftGeneration||saveGeneration!==planSaveGeneration)return;const previous=session.snapshot().plan;session.revise(actor,{...previous,siteId,revision:previous.revision+1,publicSummary:String(data.get('summary')),startsAtMs,endsAtMs,maximumLinearGain:Number(data.get('gain')),conditionsDigestHex:digest},Date.now());privateConditions=conditions;if(preparedPermit)wipePreparedPermit(preparedPermit);preparedPermit=undefined;message='Session plan saved in this tab. Authorization is required before activation.'; }
+  catch { if(generation!==draftGeneration||saveGeneration!==planSaveGeneration)return;message='Check the site reference, time range and gain ceiling.'; } render();
 }
 async function uploadStem(event: Event): Promise<void> {
   const file=(event.currentTarget as HTMLInputElement).files?.[0];if(!file)return;
-  try { if(file.size>20*1024*1024)throw Error('large');const pcm=decodeWave(new Uint8Array(await file.arrayBuffer()));if(pcm.channels!==1)throw Error('mono');const frames=pcm.samples.length/pcm.channels;
+  const generation=draftGeneration;
+  let bytes:Uint8Array<ArrayBuffer>|undefined, decoded:Float32Array|undefined;
+  try {
+    if(file.size>20*1024*1024)throw Error('large');
+    bytes=new Uint8Array(await file.arrayBuffer());
+    if(generation!==draftGeneration)return;
+    const pcm=decodeWave(bytes);decoded=pcm.samples;
+    if(pcm.channels!==1)throw Error('mono');const frames=pcm.samples.length;
     if(scene&&(scene.sampleRate!==pcm.sampleRate||scene.frames!==frames))throw Error('alignment');
     const id='stem-'+(++assetCounter);const source={id,assetId:id,position:{x:Math.min((assetCounter-1)*2,12),y:0,z:0},spreadMeters:3,gain:0.5,role:'full-range'};
-    const next:SpatialScene=scene?{...scene,revision:workspace!.snapshot().scene.revision+1,sources:[...workspace!.snapshot().scene.sources,source]}:{id:'draft-scene',revision:1,sampleRate:pcm.sampleRate,frames:frames,sources:[source]};
+    const next:SpatialScene=scene?{...scene,revision:workspace!.snapshot().scene.revision+1,sources:[...workspace!.snapshot().scene.sources,source]}:{id:'draft-scene',revision:1,sampleRate:pcm.sampleRate,frames,sources:[source]};
     if(workspace)workspace.compose(actor,next,Date.now());else workspace=new SpatialWorkspace(session,next,()=>true);
-    scene=next;stems.set(id,pcm.samples);names.set(id,file.name);message='Stem added for local drafting. Confirm its rights before publishing.';
-  } catch { message='Use a mono PCM WAV up to 20 MB. Every stem must have the same sample rate and frame count.'; } render();
+    scene=next;stems.set(id,pcm.samples);decoded=undefined;names.set(id,file.name);message='Stem added for local drafting. Confirm its rights before publishing.';
+  } catch { if(generation!==draftGeneration)return;message='Use a mono PCM WAV up to 20 MB. Every stem must have the same sample rate and frame count.'; }
+  finally { bytes?.fill(0);decoded?.fill(0); }
+  render();
 }
 function addSpeaker(event: SubmitEvent): void {
   event.preventDefault();if(!workspace)return;const d=new FormData(event.currentTarget as HTMLFormElement);const id='speaker-'+(++speakerCounter);const ownerId='draft-contributor-'+speakerCounter;
@@ -77,5 +93,37 @@ async function audition(speakerId: string): Promise<void> {
   try { const previous=audio;audio=undefined;if(previous)await previous.close();if(generation!==auditionGeneration)return;const context=new AudioContext({sampleRate:scene.sampleRate});audio=context;await context.resume();if(generation!==auditionGeneration||audio!==context){await context.close();return;}const length=Math.min(scene.frames,Math.floor(scene.sampleRate*3));const preview=new Float32Array(length);for(let offset=0;offset<length;offset+=65536){const end=Math.min(offset+65536,length);const inputs=Object.fromEntries([...stems].map(([id,pcm])=>[id,pcm.slice(offset,end)]));const fragment=workspace.audition(inputs,Date.now()).samples[speakerId];if(!fragment)throw Error('speaker');preview.set(fragment,offset);}const buffer=context.createBuffer(1,preview.length,scene.sampleRate);buffer.copyToChannel(new Float32Array(preview),0);const source=context.createBufferSource();source.buffer=buffer;source.connect(context.destination);source.start();source.stop(context.currentTime+Math.min(3,preview.length/scene.sampleRate));message='Auditioning one draft output mix on this device. This is a simulation.';render(); }
   catch { if(generation===auditionGeneration){message='This browser could not play the audition. Your draft is unchanged.';render();} }
 }
-async function encryptPermit(event: Event): Promise<void> {const file=(event.currentTarget as HTMLInputElement).files?.[0];if(!file)return;let plaintext:Uint8Array<ArrayBuffer>|undefined;try{if(file.size>20*1024*1024)throw Error('size');plaintext=new Uint8Array(await file.arrayBuffer());preparedPermit=await preparePrivateEvidence(actor,scope,plaintext,file.name,file.type,Date.now());message='Private evidence encrypted locally. Connect an authorized delivery channel before uploading.';}catch{message='Choose a PDF, PNG or JPEG up to 20 MB.';}finally{plaintext?.fill(0);}render();}
+async function encryptPermit(event: Event): Promise<void> {
+  const file=(event.currentTarget as HTMLInputElement).files?.[0];if(!file)return;
+  const generation=draftGeneration, revision=session.snapshot().plan.revision;
+  const current=()=>generation===draftGeneration&&revision===session.snapshot().plan.revision;
+  let plaintext:Uint8Array<ArrayBuffer>|undefined;
+  try {
+    if(file.size>20*1024*1024)throw Error('size');
+    plaintext=new Uint8Array(await file.arrayBuffer());if(!current())return;
+    const prepared=await preparePrivateEvidence(actor,scope,plaintext,file.name,file.type,Date.now());
+    if(!current()){wipePreparedPermit(prepared);return;}
+    if(preparedPermit)wipePreparedPermit(preparedPermit);preparedPermit=prepared;message='Private evidence encrypted locally. Connect an authorized delivery channel before uploading.';
+  } catch { if(!current())return;message='Choose a PDF, PNG or JPEG up to 20 MB.'; }
+  finally { plaintext?.fill(0); }
+  render();
+}
+function wipePreparedPermit(prepared: PreparedEvidence): void {
+  prepared.attachment.privateManifest.attachmentKeyHex='';
+  for(const chunk of prepared.attachment.ciphertextChunks)chunk.fill(0);
+}
+
 render();
+
+function discardPrivateDraft(): void {
+  draftGeneration++; planSaveGeneration++;
+  auditionGeneration++; const active = audio; audio = undefined;
+  if (active) void active.close().catch(() => {});
+  for (const samples of stems.values()) samples.fill(0);
+  stems.clear(); names.clear();
+  if (preparedPermit) wipePreparedPermit(preparedPermit);
+  preparedPermit = undefined; privateConditions = ''; workspace = undefined; scene = undefined;
+  assetCounter = 0; speakerCounter = 0;
+  try { session.cancel(actor, Date.now()); } catch { /* Local draft references are discarded regardless. */ }
+  session = newDraftSession();
+}

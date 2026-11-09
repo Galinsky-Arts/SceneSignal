@@ -8,6 +8,22 @@ Account authentication and endpoint/device authority are separate. Relays cannot
 
 Operational metadata includes opaque tenant/application routing, opaque asset and session IDs, ciphertext sizes, retention, payment-provider transaction records and point-wallet arithmetic. Private titles, manifests, audio, contributor precise locations, permits and sensitive creator records remain encrypted. Intentional public artist/station metadata and required financial facts are documented disclosures; those facts are not falsely called E2EE secrets. Radio point adjudication later requires a narrowly scoped explicit reward-verifier endpoint if it consumes private evidence; the verifier cannot silently become a media recipient.
 
-No cloud cost, production deployment, actual hardware result, independent crypto review or certification has been supplied by creating this repository. Endpoint codec/control tests verify implemented behavior, not the entire standard. Pending independent review, key-distribution integration, native secure storage, client update transparency, maintained dependency/secret scans, restore/retention drills and field trials remain release gates. Owner-authorized development merges continue around those gates. An author cannot count as their own independent release reviewer.
+No cloud cost, production deployment, actual hardware result, independent crypto review or certification has been supplied by creating this repository. Endpoint codec/control tests verify implemented behavior, not the entire standard. Actual key-distribution integration, native secure storage, client update transparency, maintained dependency/secret scans, restore/retention drills and field qualification remain distinct acceptance work. Independent expert review is deferred under `AGENTS.md`, not a release prerequisite by itself. An author cannot count as their own independent reviewer.
 
 Ciphertext relay retention is bounded to 30 days under the pinned server profile. Long-term fan/artist archives require an independently assessed endpoint-controlled backup profile. Expiration does not recall content already delivered to a listener.
+
+## Account-service processing inventory
+
+The [account service](account-service.md) adds intentionally authorized identity
+processing: email/display name, framework password hashes and session records,
+opaque tenant/session/account identifiers, and role memberships. Credentials use
+HTTPS to the authentication verifier; they are not falsely described as E2EE
+media. These are required authentication/authorization records, not permits,
+precise locations, protected manifests or content keys.
+
+The same-origin browser account flow sends only account credentials and routing/
+membership metadata. Private draft files and conditions never enter that flow.
+Database roles produce bounded account claims; they cannot mint signed media
+leases, add E2EE recipients or replace the endpoint root/key ceremony. Public
+activation and native output still require their separate current authorities.
+No account-cookie or password-reset mechanism is a private-key recovery protocol.
