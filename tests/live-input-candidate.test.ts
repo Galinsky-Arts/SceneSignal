@@ -52,3 +52,18 @@ test('scope, rights, unverified measurement, missing consent, jitter and freshne
  await assert.rejects(fresh.admit({...actor,sessionId:'foreign'},'proof',1100),/SCENE_ACCESS_DENIED/);
  await assert.rejects(fresh.admit(actor,'',1100),/INVALID_LIVE_INPUT_EVIDENCE/);
 });
+
+test('clear fences pending verification and previously cleared evidence',async()=>{
+ let release!:(value:VerifiedLiveMonitorReport)=>void;
+ const g=gate(()=>new Promise(resolve=>{release=resolve;}));
+ const pending=g.admit(actor,'pending',1100);
+ g.clear(actor,1101);
+ release(report);
+ await assert.rejects(pending,/LIVE_INPUT_EVIDENCE_SUPERSEDED/);
+ assert.equal(g.candidate(actor,1102),null);
+ const replay=gate(async()=>report);
+ await replay.admit(actor,'old',1100);
+ replay.clear(actor,1101);
+ await assert.rejects(replay.admit(actor,'old',1102),/LIVE_INPUT_EVIDENCE_CLEARED/);
+ assert.equal(replay.candidate(actor,1102),null);
+});
