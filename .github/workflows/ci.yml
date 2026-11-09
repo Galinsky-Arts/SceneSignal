@@ -9,6 +9,18 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17@sha256:ff87138949ad9a46f32ff23bd6852b52ce024a13dffe9b4087be98292cdd3b4f
+        env:
+          POSTGRES_USER: scenesignal
+          POSTGRES_PASSWORD: scenesignal-test-only
+          POSTGRES_DB: scenesignal_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U scenesignal -d scenesignal_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
@@ -18,4 +30,7 @@ jobs:
       - run: npm run core:prepare
       - run: npm ci --ignore-scripts
       - run: npm run check
+      - run: npm run test:postgres
+        env:
+          SCENESIGNAL_TEST_DATABASE_URL: postgres://scenesignal:scenesignal-test-only@127.0.0.1:5432/scenesignal_test
       - run: npm audit --audit-level=moderate

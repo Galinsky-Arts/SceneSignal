@@ -63,10 +63,11 @@ human security audit:
 2. Connect SceneSignal to the core's authenticated native output lifecycle and
    qualify real device routes, interruptions, synchronization and stop latency.
    A computed mix plan or signed simulated report is insufficient evidence.
-3. Verify the PostgreSQL contribution adapter against a real PostgreSQL instance
-   for concurrent admission, rollback, isolation, restore and retention. Its
-   current tests use an explicit SQL contract fixture. Do not enable rewards
-   against it based solely on those tests.
+3. Verify operational PostgreSQL restore and retention. The actual migration and
+   adapter now pass five real PostgreSQL 17 tests for concurrent admission,
+   rollback, connection reopening and tenant/session isolation, in addition to
+   the SQL contract fixture. This establishes storage behavior, not actual
+   hardware contributions or authorization to distribute rewards.
 4. Integrate real payment/album fulfillment, sponsorship and settlement provider
    records. The merged settlement implementation is a preview and executes no
    payments, payouts or financial distribution.

@@ -30,5 +30,21 @@ store is configured. Ordinary in-memory ledgers remain test-only.
 The database records only verified event/role identifiers, bounded seconds
 and an observation timestamp. Opaque receipt bytes are never stored. This is
 a storage protocol implementation, not verified cryptographic evidence,
-deployment validation or authorization for reward distribution. A real
-PostgreSQL integration run and DAE-14/DAE-16 verifier binding remain required.
+deployment validation or authorization for reward distribution. DAE-14/DAE-16
+verifier binding and operational restore/retention remain required.
+
+## Real PostgreSQL verification — November 9, 2026
+
+`tests/postgres-contribution.integration.mjs` runs the actual migration and adapter
+against PostgreSQL 17. It proves that 24 concurrent duplicate admissions across
+separate pools credit once; concurrent new events enforce contributor/record
+caps; replay conflicts and actual SQL constraint failures roll back; reopening
+connections preserves facts; and tenant/session identities remain isolated.
+All five tests pass locally. GitHub Actions requires this suite, with an immutable
+PostgreSQL image; CircleCI declares the same service and command but its execution
+remains unverified. No paid database or user data is involved.
+
+Run `npm run check`, then `SCENESIGNAL_TEST_DATABASE_URL=<local-test-url> npm run
+test:postgres`. The URL must point to a local `scenesignal_test` database. Each
+run creates and removes only a uniquely named test schema. Missing database
+configuration fails the integration command instead of silently skipping it.
