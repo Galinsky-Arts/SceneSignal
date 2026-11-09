@@ -46,3 +46,25 @@ test('scope, observation identity, freshness and access failures deny',async()=>
  unknown.plan(host,devices,1000,5000);
  await assert.rejects(unknown.record(host,'opaque',1200),/PILOT_OUTPUT_COVERAGE/);
 });
+
+test('observations must fall within the planned consented trial window',async()=>{
+ for(const observedAtMs of [999,5000,10001]){
+  const p=make(async()=>({...fact,observedAtMs}));
+  p.plan(host,devices,1000,5000);
+  await assert.rejects(p.record(host,'opaque',11000),/PILOT_OBSERVATION_OUTSIDE_PLAN/);
+  assert.equal(p.privateSummary(host,11000).observations.length,0);
+ }
+ const after=make(async()=>fact);after.plan(host,devices,1000,5000);
+ await after.record(host,'opaque',6000);
+ assert.equal(after.privateSummary(host,6000).observations.length,1);
+});
+test('replanning fences a pending observation even when output identities are reused',async()=>{
+ let release!:(value:VerifiedPilotObservation)=>void;
+ const p=make(()=>new Promise(resolve=>{release=resolve;}));
+ p.plan(host,devices,1000,5000);
+ const pending=p.record(host,'opaque',1200);
+ p.plan(host,devices,1201,5000);
+ release(fact);
+ await assert.rejects(pending,/PILOT_PLAN_SUPERSEDED/);
+ assert.equal(p.privateSummary(host,1202).observations.length,0);
+});

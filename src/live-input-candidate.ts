@@ -19,6 +19,8 @@ export type LiveMonitorVerifier=
 export class LiveInputCandidateGate {
   private readonly scope:Scope;
   private accepted:VerifiedLiveMonitorReport|null=null;
+  private generation=0;
+  private clearedAtMs=-1;
   constructor(scope:Scope,private readonly verify:LiveMonitorVerifier,
     private readonly maxRoundTripMs:number,private readonly maxJitterMs:number,
     private readonly minSamples:number){
@@ -33,13 +35,16 @@ export class LiveInputCandidateGate {
     requireSceneRole(actor,this.scope,['organizer','operator'],nowMs);
     invariant(typeof opaqueEvidence==='string'&&opaqueEvidence.length>0&&
       opaqueEvidence.length<=8192,'INVALID_LIVE_INPUT_EVIDENCE');
+    const generation=this.generation;
     const claim=await this.verify(opaqueEvidence);
+    invariant(generation===this.generation,'LIVE_INPUT_EVIDENCE_SUPERSEDED');
     invariant(claim&&typeof claim==='object'&&!Array.isArray(claim)&&
       Object.keys(claim).sort().join(',')===
       'expiresAtMs,inputDeviceId,jitterMs,measuredAtMs,monitorChannelVerified,monitorRouteId,performerConsentVerified,proofId,roundTripLatencyMs,sampleCount,sessionId,tenantId',
       'LIVE_INPUT_EVIDENCE_UNVERIFIED');
     for(const id of [claim.proofId,claim.inputDeviceId,claim.monitorRouteId])identifier(id);
     integer(claim.measuredAtMs);integer(claim.expiresAtMs,claim.measuredAtMs+1);
+    invariant(claim.measuredAtMs>this.clearedAtMs,'LIVE_INPUT_EVIDENCE_CLEARED');
     integer(claim.sampleCount,this.minSamples,10000);
     finite(claim.roundTripLatencyMs,0,this.maxRoundTripMs);
     finite(claim.jitterMs,0,this.maxJitterMs);
@@ -71,6 +76,8 @@ export class LiveInputCandidateGate {
   }
   clear(actor:SceneActor,nowMs:number):void{
     requireSceneRole(actor,this.scope,['organizer','operator'],nowMs);
+    this.generation++;
+    this.clearedAtMs=Math.max(this.clearedAtMs,nowMs);
     this.accepted=null;
   }
 }

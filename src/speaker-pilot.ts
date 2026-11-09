@@ -13,6 +13,8 @@ export class ControlledSpeakerPilot {
  private readonly scope:Scope;
  private readonly siteRevision:number;
  private devices:PilotSpeakerReservation[]=[];
+ private window:{startsAtMs:number;endsAtMs:number}|null=null;
+ private generation=0;
  private readonly observations=new Map<string,VerifiedPilotObservation>();
  constructor(scope:Scope,siteRevision:number,private readonly maximumDriftMs:number,
    private readonly maximumDropouts:number,private readonly verify:PilotVerifier){
@@ -37,13 +39,17 @@ export class ControlledSpeakerPilot {
      speakers.add(device.speakerId);outputs.add(device.outputId);
    }
    this.devices=structuredClone(devices);
+   this.window={startsAtMs:nowMs,endsAtMs};
+   this.generation++;
  }
  async record(actor:SceneActor,evidence:string,nowMs:number){
    requireSceneRole(actor,this.scope,['organizer','operator'],nowMs);
    invariant(this.devices.length>=10,'PILOT_NOT_PLANNED');
    invariant(typeof evidence==='string'&&evidence.length>0&&evidence.length<=8192,
      'INVALID_PILOT_EVIDENCE');
+   const generation=this.generation;
    const fact=await this.verify(evidence);
+   invariant(generation===this.generation,'PILOT_PLAN_SUPERSEDED');
    invariant(fact&&typeof fact==='object'&&!Array.isArray(fact)&&
      Object.keys(fact).sort().join(',')===
      'observationId,observedAtMs,outputs,sessionId,siteRevision,tenantId',
@@ -53,6 +59,10 @@ export class ControlledSpeakerPilot {
      fact.siteRevision===this.siteRevision,'PILOT_SCOPE_DENIED');
    invariant(fact.observedAtMs<=nowMs&&nowMs-fact.observedAtMs<=300000,
      'PILOT_OBSERVATION_STALE');
+   invariant(this.window&&fact.observedAtMs>=this.window.startsAtMs&&
+     fact.observedAtMs<this.window.endsAtMs&&
+     this.devices.every(device=>device.consentExpiresAtMs>fact.observedAtMs),
+     'PILOT_OBSERVATION_OUTSIDE_PLAN');
    invariant(Array.isArray(fact.outputs)&&fact.outputs.length===this.devices.length,
      'PILOT_OUTPUT_COVERAGE');
    const expected=new Set(this.devices.map(d=>d.outputId)),seen=new Set<string>();
