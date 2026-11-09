@@ -1,5 +1,27 @@
 # SceneSignal implementation and evidence
 
+## Dependency verification — November 9, 2026
+
+The audio dependency now pins `Galinsky-Arts/Distributed-Audio-Engine` at
+`65f1a08c4735aa232521306e35720d675d568f3c`. This revision has successful hosted
+Engine CI, Native audio CI, Signal parent integration, ciphertext relay integration
+and integrated software rehearsal runs. Local `npm run check` also passes for
+that source, including the packed-consumer and portability checks.
+
+SceneSignal uses Vite 6.4.6 to address GHSA-8g5g-mxqh-grgj. A regenerated audio
+archive and lockfile pass a clean `npm ci --ignore-scripts`, all 50 application
+tests, typechecking, roadmap validation and the production build. The dependency
+audit reports zero vulnerabilities. Two consecutive core builds produced the
+same archive SHA-512. Core preparation removes old compiled output before building
+so advancing a pin cannot retain deleted modules. The browser fixture now returns
+a browser-realm ArrayBuffer, matching a real File and preserving the core's strict
+buffer validation. Local checks used Node 24.22.1; hosted CI retains Node 24.19.0.
+
+These checks establish software compatibility only. Account/channel integration,
+native SceneSignal output, operational providers, physical calibration and pilot
+evidence remain outstanding. Independent expert review remains deferred under
+the owner policy in AGENTS.md; no certification is claimed.
+
 PRs #2 and #3 merged the session and spatial/evidence foundations. The browser-workspace candidate brings the application to 17 software tests: session safety, contributor consent, physical-output identity deduplication, fixed/tracked placement, Spime freshness, bounded PCM auditions, encrypted evidence and built-bundle draft workflows. Test identity, channel, coordinate and audio-sink adapters are explicit. The audio core is a separately prepared package pinned to immutable source.
 
 No interactive account provider, authenticated parent key channel, native output, permit review, real spatial session or deployment is claimed. Test identity and E2EE payload-decoder adapters are explicit. Private plans and permit evidence stay at authorized endpoints; public listings disclose only the approved summary, time and admission state.
