@@ -23,6 +23,11 @@ native SceneSignal output, operational providers, physical calibration and pilot
 evidence remain outstanding. Independent expert review remains deferred under
 the owner policy in AGENTS.md; no certification is claimed.
 
+Builds also discard old TypeScript output before compilation. Plan edits revoke
+pending audio auditions before asynchronous hashing, preventing a delayed audio
+resume from starting the previous plan's output. The existing built-bundle race
+test exercises this cancellation path.
+
 PRs #2 and #3 merged the session and spatial/evidence foundations. The browser-workspace candidate brings the application to 17 software tests: session safety, contributor consent, physical-output identity deduplication, fixed/tracked placement, Spime freshness, bounded PCM auditions, encrypted evidence and built-bundle draft workflows. Test identity, channel, coordinate and audio-sink adapters are explicit. The audio core is a separately prepared package pinned to immutable source.
 
 No interactive account provider, authenticated parent key channel, native output, permit review, real spatial session or deployment is claimed. Test identity and E2EE payload-decoder adapters are explicit. Private plans and permit evidence stay at authorized endpoints; public listings disclose only the approved summary, time and admission state.
