@@ -12,3 +12,4 @@ export * from './spatial-automation.js';
 export * from './live-scene-control.js';
 export * from './session-contribution.js';
 export * from './postgres-contribution-store.js';
+export * from './accessible-event.js';
