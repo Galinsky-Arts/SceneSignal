@@ -2,6 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { fixture, contributor, organizer, output } from '../dist/tests/helpers/native-playback.js';
+import { prepareSceneOutput, SceneNativePlayback } from '../dist/src/index.js';
+import { ProgramTimeline } from '../node_modules/@neophilism/distributed-audio-engine/dist/src/index.js';
 
 assert.ok(process.env.DAE_TEST_ADDON, 'Run npm run test:native; native integration must not silently skip');
 const native = createRequire(import.meta.url)(process.env.DAE_TEST_ADDON);
@@ -35,6 +37,25 @@ class KernelBridge {
 }
 const silent = samples => assert.ok(samples.every(value => value === 0), 'native output must be silent');
 for (const platform of ['android', 'ios']) {
+  test(`${platform}: actual spatial composition is encrypted, decrypted and rendered by production C`, async t => {
+    const f = await fixture(platform);
+    f.endpoint.close();
+    const prepared = await prepareSceneOutput({ actor: organizer, session: f.session, workspace: f.workspace,
+      speakerId: 'speaker', programId: 'spatial-native-program', assetId: 'asset', parentMessageId: 'spatial-native-private',
+      epochUnixMs: 2000, rightsValidUntilMs: 7000, stems: { stem: new Float32Array(8000).fill(0.5) }, nowMs: f.options.nowUnixMs });
+    const bridge = new KernelBridge(f.options.nowUnixMs);
+    const options = { ...f.options, bridge, timeline: new ProgramTimeline(prepared.epochUnixMs, prepared.program),
+      resolver: { async resolve() { return prepared.asset; } },
+      transport: { async read(request) { return prepared.ciphertextChunks[request.chunkIndex].slice(); } } };
+    const endpoint = platform === 'android'
+      ? SceneNativePlayback.android({ ...options, native: { nowMonotonicMs: () => f.options.nowUnixMs() + 10000 } })
+      : SceneNativePlayback.ios({ ...options, native: { nowHostTimeMs: () => f.options.nowUnixMs() + 10000 } });
+    t.after(() => { try { endpoint.close(); } finally { bridge.close(); } });
+    await endpoint.join(contributor, await f.control()); await endpoint.pump(contributor);
+    const samples = bridge.render(12050);
+    assert.ok(samples.every(value => Math.abs(value - 0.0375) < 0.00004));
+    f.session.cancel(organizer, 2001); silent(bridge.render(12060));
+  });
   test(`${platform}: signed emergency control clears the production C queue`, async t => {
     let bridge;
     const f = await fixture(platform, true, clock => (bridge = new KernelBridge(clock)));
