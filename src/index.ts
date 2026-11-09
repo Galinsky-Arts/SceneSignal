@@ -18,3 +18,4 @@ export * from './site-operations.js';
 export * from './live-input-candidate.js';
 export * from './settlement-preview.js';
 export * from './speaker-pilot.js';
+export * from './native-playback.js';

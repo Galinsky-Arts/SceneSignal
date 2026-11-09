@@ -1,5 +1,14 @@
 # SceneSignal delivery verification — November 9, 2026
 
+## Subsequent native integration
+
+The later native-runtime delivery advances the audio pin to
+`b49fa569ea49663182bffdcef319ec48222c40c7` after upstream #85 passed all eight hosted
+gates. The current application has 141 tests plus four registry cases and eight
+actual SceneSignal-to-C integration cases. See [native runtime](native-session-runtime.md)
+for the owned session/consent/output boundaries and precise verification scope.
+The initial integration counts and pin below are retained as historical evidence.
+
 ## Verified source delivery
 
 The following changes are merged on `main`. Each PR's exact head passed both
@@ -60,9 +69,11 @@ human security audit:
 1. Connect an operational identity adapter, authorized endpoint membership/key
    channels, ciphertext transport/storage and recovery/retention lifecycle. The
    browser currently provides local drafting only.
-2. Connect SceneSignal to the core's authenticated native output lifecycle and
-   qualify real device routes, interruptions, synchronization and stop latency.
-   A computed mix plan or signed simulated report is insufficient evidence.
+2. Complete account/parent provisioning, phone application bootstrap and
+   per-output spatial program publication, then qualify real device routes,
+   interruptions, synchronization and audible stop latency. The native runtime
+   is now connected to the core's signed output lifecycle and production C
+   kernel; those software tests do not establish physical output qualification.
 3. Verify operational PostgreSQL restore and retention. The actual migration and
    adapter now pass five real PostgreSQL 17 tests for concurrent admission,
    rollback, connection reopening and tenant/session isolation, in addition to

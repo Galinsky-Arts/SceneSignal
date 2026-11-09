@@ -29,7 +29,8 @@
     "dev": "vite",
     "preview": "vite preview",
     "registry:check": "node scripts/validate-pr-registry.mjs && node --test registry/pr-contract.test.mjs",
-    "test:postgres": "node --test tests/postgres-contribution.integration.mjs"
+    "test:postgres": "node --test tests/postgres-contribution.integration.mjs",
+    "test:native": "node scripts/test-native.mjs"
   },
   "dependencies": {
     "@neophilism/distributed-audio-engine": "file:.deps/audio-core.tgz"

@@ -19,6 +19,7 @@ export class SpatialWorkspace {
   private scene: SpatialScene;
   private readonly speakers = new Map<string, ContributorSpeaker>();
   private readonly spimes = new Map<string, Spime>();
+  private readonly speakerLeaves = new Set<(speakerId: string) => void>();
   private readonly placements = new PlacementRegistry({ maxAgeMs: 3000, maxUncertaintyMeters: 0.5, minConfidence: 0.9 });
   private readonly scope: Scope;
   private lastAutomationAtMs = -1;
@@ -27,6 +28,12 @@ export class SpatialWorkspace {
     validateScene(scene); this.scene = structuredClone(scene); this.scope = session.snapshot().scope;
   }
   snapshot(): { scene: SpatialScene; speakers: ContributorSpeaker[]; spimes: Spime[] } { return structuredClone({ scene: this.scene, speakers: [...this.speakers.values()], spimes: [...this.spimes.values()] }); }
+  belongsTo(session: SceneSession): boolean { return this.session === session; }
+  subscribeSpeakerLeave(listener: (speakerId: string) => void): () => void {
+    invariant(typeof listener === 'function' && this.speakerLeaves.size < 64, 'SPEAKER_SUBSCRIPTION_LIMIT');
+    this.speakerLeaves.add(listener);
+    return () => { this.speakerLeaves.delete(listener); };
+  }
   compose(actor: SceneActor, scene: SpatialScene, nowMs: number): void {
     requireSceneRole(actor, this.scope, ['organizer','operator'], nowMs); validateScene(scene);
     invariant(scene.id === this.scene.id && scene.revision === this.scene.revision + 1 && scene.sampleRate === this.scene.sampleRate && scene.frames === this.scene.frames, 'SCENE_REVISION_OR_ALIGNMENT_CONFLICT');
@@ -91,6 +98,11 @@ export class SpatialWorkspace {
     const s = this.speakers.get(speakerId); invariant(s, 'UNKNOWN_SPEAKER');
     integer(actor.expiresAtMs, nowMs + 1); invariant(actor.tenantId === this.scope.tenantId && actor.sessionId === this.scope.sessionId && (s.ownerId === actor.identityId || actor.roles.some(r => ['organizer','operator','steward'].includes(r))), 'SPEAKER_LEAVE_DENIED');
     this.speakers.delete(speakerId); this.placements.unbind(speakerId);
+    let failure: unknown, failed = false;
+    for (const listener of [...this.speakerLeaves]) {
+      try { listener(speakerId); } catch (error) { if (!failed) { failure = error; failed = true; } }
+    }
+    if (failed) throw failure;
   }
   setFixedPosition(actor: SceneActor, speakerId: string, position: Position, nowMs: number): void {
     requireSceneRole(actor, this.scope, ['organizer','operator'], nowMs); const s = this.speakers.get(speakerId); invariant(s?.placement === 'fixed', 'SPEAKER_NOT_FIXED');
