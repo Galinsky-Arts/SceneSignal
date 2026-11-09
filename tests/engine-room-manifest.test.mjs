@@ -8,7 +8,7 @@ test('Engine Room approved manifest names this repository and agrees with its pl
   const approved = text.match(/^  approved: (.+)$/m)?.[1];
   const planned = Number(text.match(/^  planned_prs: (\d+)$/m)?.[1]);
   const counts = [...text.matchAll(/^    prs: (\d+)$/gm)].map(match => Number(match[1]));
-  assert.equal(repo, 'neophilism/SceneSignal');
+  assert.equal(repo, 'Galinsky-Arts/SceneSignal');
   assert.equal(approved, 'true');
   assert.equal(planned, 16);
   assert.deepEqual(counts, [4,4,4,4]);
