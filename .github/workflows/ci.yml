@@ -30,6 +30,7 @@ jobs:
       - run: npm run core:prepare
       - run: npm ci --ignore-scripts
       - run: npm run check
+      - run: npm run test:native
       - run: npm run test:postgres
         env:
           SCENESIGNAL_TEST_DATABASE_URL: postgres://scenesignal:scenesignal-test-only@127.0.0.1:5432/scenesignal_test

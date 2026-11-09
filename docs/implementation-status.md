@@ -1,5 +1,25 @@
 # SceneSignal implementation and evidence
 
+## Native runtime checkpoint — November 9, 2026
+
+SceneSignal now pins the integrated audio SDK at
+`b49fa569ea49663182bffdcef319ec48222c40c7`, following the upstream #85 integration
+and all eight hosted gates. All upstream pending source PRs are resolved. The
+[native session runtime](native-session-runtime.md) composes site authorization,
+scoped contributor identity, speaker consent/placement, exact output binding,
+signed leases and the actual encrypted program/native sinks. Application stop
+fanout reaches every owned output even when another callback fails.
+
+The application suite passes 141 tests plus four registry contract tests. Eight
+separate SceneSignal-to-production-C cases verify real samples, immediate
+withdrawal/cancellation, signed emergency stops and deadlines without another
+JavaScript tick. These are required hosted checks alongside the real PostgreSQL
+suite. The dependency audit reports zero vulnerabilities.
+
+Actual account/parent provisioning, phone application bootstrap, per-output
+spatial program publication and physical device/field qualification are still
+separate from this tested native runtime. No physical safety claim is inferred.
+
 ## Integrated source checkpoint — November 9, 2026
 
 PRs #13, #14 and #22–#25/#27–#33 are merged. The integrated source passes 123

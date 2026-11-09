@@ -25,6 +25,9 @@ jobs:
           name: Typecheck, roadmap contracts, full unit tests and build
           command: npm run check
       - run:
+          name: Scene session to production C output integration
+          command: npm run test:native
+      - run:
           name: Real PostgreSQL contribution concurrency and rollback
           command: npm run test:postgres
       - run:
