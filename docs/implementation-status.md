@@ -12,8 +12,9 @@ SceneSignal uses Vite 6.4.6 to address GHSA-8g5g-mxqh-grgj. A regenerated audio
 archive and lockfile pass a clean `npm ci --ignore-scripts`, all 50 application
 tests, typechecking, roadmap validation and the production build. The dependency
 audit reports zero vulnerabilities. Two consecutive core builds produced the
-same archive SHA-512. Core preparation removes old compiled output before building
-so advancing a pin cannot retain deleted modules. The browser fixture now returns
+same archive SHA-512. Core preparation normalizes public package file permissions
+so local umask differences cannot change the archive on hosted runners. It removes
+old compiled output before building so advancing a pin cannot retain deleted modules. The browser fixture now returns
 a browser-realm ArrayBuffer, matching a real File and preserving the core's strict
 buffer validation. Local checks used Node 24.22.1; hosted CI retains Node 24.19.0.
 
