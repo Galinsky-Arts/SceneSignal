@@ -22,7 +22,7 @@
   "scripts": {
     "core:prepare": "node scripts/prepare-core.mjs",
     "typecheck": "tsc --noEmit",
-    "build": "tsc && vite build",
+    "build": "node scripts/clean-build.mjs && tsc && vite build",
     "test": "npm run build && node --test dist/tests/*.test.js tests/*.test.mjs",
     "roadmap:check": "node scripts/check-roadmap.mjs",
     "check": "npm run typecheck && npm run roadmap:check && npm test",
