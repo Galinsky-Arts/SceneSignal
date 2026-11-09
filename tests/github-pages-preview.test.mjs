@@ -12,6 +12,9 @@ test('public Pages deploy builds only the approved static draft and requires che
   assert.match(workflow,/npm run check/);
   assert.match(workflow,/path: web-dist/);
   assert.match(workflow,/needs: build/);
+  assert.match(workflow,/needs: verify/);
+  assert.match(workflow,/uses: \.\/\.github\/workflows\/ci\.yml/);
+  assert.match(workflow,/github\.repository == 'Galinsky-Arts\/SceneSignal'/);
   assert.match(workflow,/pages: write/);
   assert.match(workflow,/id-token: write/);
   assert.match(vite,/\['\/', '\/SceneSignal\/'\]/);
