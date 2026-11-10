@@ -10,7 +10,7 @@
   "scopeNote": "Units filtered by this repository prefix from the multi-repository shared roadmap. Other repository units are not counted here.",
   "schemaVersion": 1,
   "roadmapVersion": 2,
-  "observedAt": "2026-11-09T23:47:29.478Z",
+  "observedAt": "2026-11-10T00:05:58.920Z",
   "units": [
     {
       "id": "SS-01",
@@ -277,7 +277,8 @@
       ],
       "externalPrerequisites": [],
       "contributingPrs": [
-        36
+        36,
+        40
       ]
     },
     {
@@ -499,11 +500,57 @@
         31,
         36,
         37,
-        38
+        38,
+        40
       ]
     }
   ],
   "pullRequests": [
+    {
+      "id": 5233219473,
+      "number": 41,
+      "title": "Verify and advance the integrated audio dependency archive",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/41",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-11-09T23:57:27Z",
+      "updatedAt": "2026-11-09T23:58:47Z",
+      "closedAt": "2026-11-09T23:58:47Z",
+      "mergedAt": "2026-11-09T23:58:47Z",
+      "headSha": "a3ea4c4f07e219fc67d297e2e966746eeb06be25",
+      "baseRef": "main",
+      "mergeCommitSha": "39457a215362605d930ce81667119a8888155bca"
+    },
+    {
+      "id": 5233183677,
+      "number": 40,
+      "title": "Prepare authorized spatial mixes for encrypted native playback",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/40",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-11-09T23:54:01Z",
+      "updatedAt": "2026-11-09T23:55:01Z",
+      "closedAt": "2026-11-09T23:55:01Z",
+      "mergedAt": "2026-11-09T23:55:01Z",
+      "headSha": "0924b808ae1b2f1a305976dc161ff99ef9860f82",
+      "baseRef": "main",
+      "mergeCommitSha": "f275c769ba2064e5179cee8072f0b55912e6164b"
+    },
+    {
+      "id": 5233123564,
+      "number": 39,
+      "title": "Record account, native and Render preparation evidence",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/39",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-11-09T23:47:53Z",
+      "updatedAt": "2026-11-09T23:49:26Z",
+      "closedAt": "2026-11-09T23:49:26Z",
+      "mergedAt": "2026-11-09T23:49:26Z",
+      "headSha": "43ea7620e37792ab44e7f8edadd859755066173b",
+      "baseRef": "main",
+      "mergeCommitSha": "6bd03e18e3625feb26e35b6337fdbfd98b68a6d5"
+    },
     {
       "id": 5233081206,
       "number": 38,
@@ -854,11 +901,11 @@
       "number": 15,
       "title": "Deploy draft-only SceneSignal preview via GitHub Pages without Render",
       "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/15",
-      "state": "open",
+      "state": "closed",
       "draft": false,
       "createdAt": "2026-10-10T01:00:27Z",
-      "updatedAt": "2026-11-09T22:56:02Z",
-      "closedAt": null,
+      "updatedAt": "2026-11-09T23:47:34Z",
+      "closedAt": "2026-11-09T23:47:33Z",
       "mergedAt": null,
       "headSha": "bcab5537cab38d939e46a05226a1418819a2dd5a",
       "baseRef": "main",

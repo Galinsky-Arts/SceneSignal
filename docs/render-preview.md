@@ -1,5 +1,12 @@
 # Render account-enabled preview
 
+The preview is now **live** at https://scenesignal-preview.onrender.com.
+Service `srv-dbp5tgom7kps739u7ca0` deploy `dep-dbp5thgm7kps739u7do0` serves
+commit `39457a215362605d930ce81667119a8888155bca`; actual browser/API/database
+verification is recorded [here](render-deployment-verification-2026-11-10.md).
+The owner approved the plan and nonbillable follow-up work without repeated
+approval requests. A later Blueprint plan returned `no_changes`.
+
 The owner selected Phillip's Render workspace (`tea-dbp1vrrl550s73c3dgrg`).
 `render.yaml` defines one free Node web service in Virginia and the free
 PostgreSQL 17 database created for this preview. It must adopt that exact database,
@@ -30,7 +37,8 @@ the connector cannot inspect or set those limits. This is a preview, not durable
 production hosting. Do not use the preview for irreplaceable account data.
 
 Before applying a Blueprint, inspect its concrete resource plan and confirm that
-it changes only the new SceneSignal service and database. After approval, monitor
+it changes only the intended SceneSignal service and database. Within the owner's
+standing nonbillable authorization, continue without re-requesting approval; monitor
 the exact deploy to `live`; verify HTTPS `/healthz`, the actual account flow and
 the local-only draft boundary. A planned Blueprint or successful build is not
 evidence of a live service or physical audio qualification.

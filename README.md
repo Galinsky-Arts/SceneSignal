@@ -1,5 +1,7 @@
 # SceneSignal
 
+**Live account-enabled preview:** [scenesignal-preview.onrender.com](https://scenesignal-preview.onrender.com). [Deployment verification](docs/render-deployment-verification-2026-11-10.md). This free preview's database expires December 9, 2026; physical speaker operation remains gated by actual device/site qualification.
+
 The endpoint SDK includes [encrypted per-speaker spatial program preparation](docs/spatial-program-preparation.md) and the [native session runtime](docs/native-session-runtime.md). Actual account/device claims, E2EE parent provisioning, signed output authority and physical qualification remain required for an operating session.
 
 **Development and handoff plan:** [docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md).
