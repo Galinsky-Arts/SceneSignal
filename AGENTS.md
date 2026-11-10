@@ -1,3 +1,12 @@
+## Owner authorization — 2026-11-10
+
+The owner approved the reviewed Render preview plan and explicitly authorized
+further work that does not require money without repeated approval requests.
+Continue implementation, verification, merges and nonbillable deployment work
+within the requested scope. Do not introduce paid resources, paid upgrades or
+billable fallbacks without explicit cost authorization. Preserve actual access,
+cryptographic, transaction and hardware-evidence requirements.
+
 ## Owner security-review policy — 2026-10-13
 
 The owner explicitly directs all projects to continue implementation, testing, merging and deployment without waiting for an independent human security review, external auditor, paid penetration test or E2EESA certification. This supersedes older repository planning text that makes absence of such review an operational prerequisite.

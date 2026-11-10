@@ -1,5 +1,19 @@
 # SceneSignal implementation and evidence
 
+## Live preview checkpoint — November 10, 2026
+
+The [Render preview](https://scenesignal-preview.onrender.com) is live at commit
+`39457a215362605d930ce81667119a8888155bca`. Actual Chromium/HTTPS checks exercised
+two accounts, ownership, collaborator access, voluntary departure, sign-out,
+sign-in, private-draft clearing and a phone viewport. Read-only provider SQL
+confirmed one owner membership and zero departed-collaborator memberships.
+`/healthz` returns 200; anonymous session access returns 401. Subsequent Blueprint
+planning returned `no_changes`. See the [source-bound deployment record](render-deployment-verification-2026-11-10.md).
+
+The owner approved nonbillable follow-up work without repeated approvals. No paid
+resource or upgrade was added. The free database expires December 9. Earlier
+deployment-preparation checkpoints below describe the historical pending state.
+
 ## Current dependency checkpoint — November 9, 2026
 
 The audio dependency is now pinned to `532d28a7e479fe25428c315ba415c3722de7b84c`
