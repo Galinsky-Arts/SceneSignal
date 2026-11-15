@@ -22,7 +22,7 @@
   All stages remain pending.
 - **Stale PRs.** #11 (CI telemetry) and #17 (superseded by #43) were closed with
   explanations. #16 (auto-merge) was closed because it could bypass gates.
-- **Test counts.** 162 application cases, four registry cases, 22 PostgreSQL/HTTP
+- **Test counts.** 164 application cases, four registry cases, 22 PostgreSQL/HTTP
   cases and ten production-C cases.
 
 Physical SS-30/SS-31 trials, endpoint key provisioning, mail delivery, provider

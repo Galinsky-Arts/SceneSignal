@@ -19,7 +19,7 @@ Phillip's personal workspace, whose free Render database expires December 9,
 | Anonymous membership access | GET `/api/scene/sessions`: 401, `sign_in_required` |
 | Capabilities | GET `/api/capabilities`: `{"passwordRecovery":false}` (no mail key configured) |
 
-The build on Render ran `npm run check`: 162 application cases and four registry
+The build on Render ran `npm run check`: 164 application cases and four registry
 cases. The same source's hosted CI also passed the PostgreSQL/HTTP suite (22
 cases, including the new recovery suite) and ten production-C cases. The
 dependency audit was clean.
