@@ -20,6 +20,15 @@ now live in the Galinsky Arts Neon project `scenesignal`
   nothing references it.
 - Automatic deploys follow `main` after GitHub checks pass (`checksPass`).
 
+Result: deploy `dep-dbsvojbm8hqs73dtjdlg` (commit `79fea8e`) ran the copy once and
+went live on Neon. Copied and count-verified rows: `user` 2, `account` 2,
+`scene_account_membership` 1, `rateLimit` 4, `session` 0, `verification` 0,
+`scene_contribution_events` 0 (existing sessions were none, so no one is signed
+out by the move). `SCENESIGNAL_COPY_FROM_DATABASE_URL` was then deleted from the
+service; `POSTGRES_EXTERNAL_HOST` is gone. Live browser checks were not repeated
+from this environment (its egress cannot reach `*.onrender.com`); Render's
+`/healthz` probe, which verifies the account schema, passed.
+
 
 The preview is now **live** at https://scenesignal-preview.onrender.com.
 Service `srv-dbp5tgom7kps739u7ca0` deploy `dep-dbp5thgm7kps739u7do0` serves
