@@ -38,6 +38,22 @@ if (code !== 0 || signal) {
   console.error('SceneSignal Render migration did not complete.');
   process.exitCode = 1;
 } else {
+  // Optional one-time data move into a freshly migrated database. Set only for
+  // the move, then remove. A failed copy fails startup, so Render keeps the
+  // previous healthy deploy; a non-empty target is left untouched.
+  const copySource = process.env.SCENESIGNAL_COPY_FROM_DATABASE_URL ?? '';
+  let copied = true;
+  if (copySource) {
+    try {
+      const { copyFromUrls } = await import('./copy-postgres.mjs');
+      await copyFromUrls(copySource, process.env.DATABASE_URL,
+        entry => console.log(JSON.stringify({ event: 'scenesignal-database-copy', ...entry })));
+    } catch (error) {
+      const code = /^COPY_[A-Z_]+/.exec(error instanceof Error ? error.message : '')?.[0] ?? 'COPY_FAILED';
+      console.error('SceneSignal database copy did not complete: ' + code);
+      process.exitCode = 1; copied = false;
+    }
+  }
   // Import in-process so the service receives Render's shutdown signals directly.
-  await import('../dist/server/main.js');
+  if (copied) await import('../dist/server/main.js');
 }

@@ -10,7 +10,7 @@
   "scopeNote": "Units filtered by this repository prefix from the multi-repository shared roadmap. Other repository units are not counted here.",
   "schemaVersion": 1,
   "roadmapVersion": 2,
-  "observedAt": "2026-11-15T00:30:00.000Z",
+  "observedAt": "2026-11-15T18:34:11.000Z",
   "units": [
     {
       "id": "SS-01",
@@ -362,7 +362,9 @@
       "id": "SS-24",
       "title": "Session contribution rewards",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        24
+      ],
       "dependsOn": [
         "SS-14"
       ],
@@ -378,7 +380,6 @@
       ],
       "externalPrerequisites": [],
       "contributingPrs": [
-        24,
         35
       ]
     },
@@ -399,14 +400,15 @@
       "id": "SS-26",
       "title": "Acoustic monitoring and emergency controls",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        14
+      ],
       "dependsOn": [
         "SS-25"
       ],
       "externalDependencies": [],
       "externalPrerequisites": [],
       "contributingPrs": [
-        14,
         36
       ]
     },
@@ -414,28 +416,28 @@
       "id": "SS-27",
       "title": "Weather, access and site operations",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        27
+      ],
       "dependsOn": [
         "SS-26"
       ],
       "externalDependencies": [],
-      "externalPrerequisites": [],
-      "contributingPrs": [
-        27
-      ]
+      "externalPrerequisites": []
     },
     {
       "id": "SS-28",
       "title": "Optional live-performance audio",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        28
+      ],
       "dependsOn": [
         "SS-27"
       ],
       "externalDependencies": [],
       "externalPrerequisites": [],
       "contributingPrs": [
-        28,
         36
       ]
     },
@@ -443,19 +445,18 @@
       "id": "SS-29",
       "title": "Session settlement and impact reporting",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        29
+      ],
       "dependsOn": [
         "SS-28"
       ],
       "externalDependencies": [],
-      "externalPrerequisites": [],
-      "contributingPrs": [
-        29
-      ]
+      "externalPrerequisites": []
     },
     {
       "id": "SS-30",
-      "title": "Controlled 10\u201320-speaker pilot",
+      "title": "Controlled 10–20-speaker pilot",
       "origin": "original",
       "prs": [],
       "dependsOn": [
@@ -463,7 +464,7 @@
       ],
       "externalDependencies": [],
       "externalPrerequisites": [
-        "Actual authorized 10\u201320-speaker field pilot with attributable consent, calibration, emergency-stop and acoustic results."
+        "Actual authorized 10–20-speaker field pilot with attributable consent, calibration, emergency-stop and acoustic results."
       ],
       "contributingPrs": [
         30
@@ -479,7 +480,7 @@
       ],
       "externalDependencies": [],
       "externalPrerequisites": [
-        "Actual authorized 10\u201320-speaker field pilot with attributable consent, calibration, emergency-stop and acoustic results.",
+        "Actual authorized 10–20-speaker field pilot with attributable consent, calibration, emergency-stop and acoustic results.",
         "Actual staged larger-scale qualification and published supported-device limits."
       ]
     },
@@ -493,7 +494,7 @@
       ],
       "externalDependencies": [],
       "externalPrerequisites": [
-        "Actual authorized 10\u201320-speaker field pilot with attributable consent, calibration, emergency-stop and acoustic results.",
+        "Actual authorized 10–20-speaker field pilot with attributable consent, calibration, emergency-stop and acoustic results.",
         "Verified operational identity/E2EE channels, native outputs, provider integration and owner-approved site-specific release evidence."
       ],
       "contributingPrs": [
@@ -504,11 +505,27 @@
         40,
         42,
         44,
-        45
+        45,
+        46
       ]
     }
   ],
   "pullRequests": [
+    {
+      "id": 5317795673,
+      "number": 46,
+      "title": "Record verified Galinsky Labs preview and refresh PR registry",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/46",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-11-15T00:24:38Z",
+      "updatedAt": "2026-11-15T00:26:14Z",
+      "closedAt": "2026-11-15T00:26:13Z",
+      "mergedAt": "2026-11-15T00:26:13Z",
+      "headSha": "7bb7b7de14b4e4faf442a33a1313617453b2bdf2",
+      "baseRef": "main",
+      "mergeCommitSha": "670df4f631dac66ac078c6140e59544ae54f83a1"
+    },
     {
       "id": 5317756524,
       "number": 45,
@@ -737,7 +754,7 @@
     {
       "id": 5110225918,
       "number": 30,
-      "title": "SS-30: Controlled 10\u201320-speaker pilot",
+      "title": "SS-30: Controlled 10–20-speaker pilot",
       "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/30",
       "state": "closed",
       "draft": false,

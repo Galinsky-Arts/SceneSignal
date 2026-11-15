@@ -1,5 +1,26 @@
 # Render account-enabled preview
 
+## Database moved to Neon — November 15, 2026
+
+The free Render PostgreSQL database `dpg-dbp5k8k9v7es73am52kg-a` expires on
+December 9, 2026. Accounts for `scenesignal-preview` (`srv-dbp5tgom7kps739u7ca0`)
+now live in the Galinsky Arts Neon project `scenesignal`
+(`fancy-night-72553226`, aws-us-east-1, PostgreSQL 17, free plan).
+
+- `DATABASE_URL` is a Render secret naming Neon's public, publicly-certified
+  host; `POSTGRES_EXTERNAL_HOST` is removed, so `scripts/render-start.mjs` uses
+  its external-provider mode with `sslmode=verify-full`.
+- Data was moved with `scripts/copy-postgres.mjs`, run once by the start script
+  while `SCENESIGNAL_COPY_FROM_DATABASE_URL` named the old database's public
+  endpoint: the application migration created the Neon schema, rows were read in
+  one read-only snapshot and written in one transaction that commits only when
+  every table's row count matches; a non-empty target is never written; logs show
+  table names and counts only. The variable was removed afterwards.
+- The old Render database is left in place (not deleted) for the owner to remove;
+  nothing references it.
+- Automatic deploys follow `main` after GitHub checks pass (`checksPass`).
+
+
 The preview is now **live** at https://scenesignal-preview.onrender.com.
 Service `srv-dbp5tgom7kps739u7ca0` deploy `dep-dbp5thgm7kps739u7do0` serves
 commit `39457a215362605d930ce81667119a8888155bca`; actual browser/API/database

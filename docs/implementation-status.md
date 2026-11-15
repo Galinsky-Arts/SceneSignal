@@ -1,5 +1,19 @@
 # SceneSignal implementation and evidence
 
+## Galinsky Arts preview database and dependency checkpoint — November 15, 2026
+
+- **Neon.** The Galinsky Arts preview (`scenesignal-preview`) moved from the
+  expiring free Render database to the Galinsky Arts Neon project `scenesignal`
+  (`fancy-night-72553226`) with the verified, transactional
+  `scripts/copy-postgres.mjs` ([details](render-preview.md)). Two new PostgreSQL
+  integration tests cover exact text-level row equality (microsecond timestamps,
+  bigint), names/counts-only logging, idempotent restart and full rollback.
+- **Audio Engine pin** advanced to `c6fd5fa6c9a1a5cf3e8a3a72f60f515083661430`
+  (playback stream-adapter seam and relay slug fix); archive/lock integrity re-verified.
+- **Registry.** SS-24 and SS-26–SS-29 now map their exact-ID merged PRs (#24, #14,
+  #27, #28, #29) as primary PRs; they have no external prerequisites. SS-30–SS-32
+  keep field-pilot/release prerequisites and contributing-only evidence. #46 added.
+
 ## Galinsky Labs preview and account lifecycle checkpoint — November 15, 2026
 
 - **New preview.** A free preview now runs at https://scenesignal.onrender.com in
