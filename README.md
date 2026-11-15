@@ -6,6 +6,8 @@ The endpoint SDK includes [encrypted per-speaker spatial program preparation](do
 
 **Development and handoff plan:** [docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md).
 
+The canonical [security/e2eesa-status.json](security/e2eesa-status.json) records standard implementation, complete testing and independent expert review separately. Engine Room reads it automatically from GitHub. All initial stages are pending; existing profile locks and approved decisions remain authoritative. Read [adoption and independent-account instructions](docs/E2EESA_ADOPTION.md), and run `python3 scripts/validate_e2eesa_status.py`. Record validation does not establish product security or certification.
+
 Community spatial music sessions, built directly on Distributed Audio Engine. No dependency on Distributed Radio Engine or TrackZero.
 
 The first application implementation supplies an endpoint-owned session lifecycle: scoped organizer/operator/steward roles, site and condition revisions, signed permit or organizer-assertion decisions, current-time activation, automatic expiry, cancellation and minimized free-admission listings. [Session lifecycle](docs/session-lifecycle.md) · [Implementation and evidence](docs/implementation-status.md) · [Development plan](docs/scenesignal-development-plan.md)
