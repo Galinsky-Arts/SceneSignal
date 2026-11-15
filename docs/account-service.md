@@ -38,6 +38,30 @@ claims before protected operations. Previously issued claims/leases are bounded,
 not magically recalled by a disconnected server. Device consent, signed site
 authorization, root membership and native output authority remain separate.
 
+## Recovery and account lifecycle
+
+- **Restore on load.** The browser reads `/api/capabilities` and `/api/auth/get-session`
+  with bodiless same-origin GETs, so a reload keeps a signed-in account. A static
+  host without the service leaves only the local draft workspace.
+- **Password change.** Signed-in users change their password with the current
+  password; every other device session is revoked. "Sign out other devices" alone
+  is also available.
+- **Email password reset.** Enabled only when the host configures both
+  `RESEND_API_KEY` and `SCENESIGNAL_MAIL_FROM` (a partial configuration stops
+  startup). Requests answer identically for unknown addresses, are limited to three
+  per client per 15 minutes, and only accept same-origin redirect targets. The
+  single-use link expires after 30 minutes; the browser removes its token from the
+  address bar and history before showing the form. A reset revokes every session.
+  Without a mail key, the Account tab says email recovery is not configured instead
+  of offering a form that cannot deliver.
+- **Account deletion.** Requires the current password on every request (session age
+  alone is not enough) plus an explicit confirmation. Deleting an organizer also
+  deletes every membership in the sessions it organized, so collaborators never
+  keep access to a session nobody can administer. Deletion clears the local draft.
+
+Recovery restores account access only. It never grants custody of, or recovers,
+private media keys, permits or drafts, which stay on endpoints.
+
 ## Processing boundary
 
 The server intentionally processes email, display name, password authentication,
@@ -67,8 +91,13 @@ escaped display names, disabled public activation and private-draft clearing wit
 no protected-data uploads or external requests. Unit regressions cover late
 private work after sign-out and configuration-error secrecy.
 
-This service does not assert verified email ownership or supply an email recovery
-provider. Mail/verification/recovery configuration, an actual production database
+The separate recovery suite verifies with real Better Auth/PostgreSQL that reset
+links are single-use, rate limited, origin-bound and revoke sessions; that unknown
+addresses send nothing; that password changes require the current password; and
+that deletion re-proves the password and removes organized session references.
+
+This service does not assert verified email ownership. Reset delivery needs an
+owner-provided mail key and verified sender domain. Email verification, an actual production database
 and deployment, restore/retention drills and endpoint account-root/key provisioning
 remain operational acceptance work. Password/account recovery must not become
 server custody of private media keys. No live account deployment, physical device

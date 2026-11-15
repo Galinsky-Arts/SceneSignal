@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "repository": "neophilism/SceneSignal",
+  "classificationStatus": "unverified",
+  "coverageComplete": false,
+  "components": [],
+  "dataFlows": [],
+  "sourceObservations": [
+    {
+      "path": "README.md",
+      "blobSha": "324ef7689881909a995f25d28a33a8cf3a0139e3"
+    }
+  ],
+  "limitations": [
+    "This is a discovery placeholder, not a complete E2EESA component inventory or a claim that no protected flows exist.",
+    "Use the pinned upstream 0.2 component-inventory and scoped-assessment contracts for actual assessment."
+  ]
+}

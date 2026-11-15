@@ -2,6 +2,7 @@ import { createServer } from 'node:http';
 import { resolve } from 'node:path';
 import pg from 'pg';
 import { createAccountService } from './accounts.js';
+import { resendPasswordResetMailer } from './mail.js';
 
 let pool: pg.Pool | undefined;
 try {
@@ -15,7 +16,8 @@ try {
   pool = new pg.Pool({ connectionString: process.env.DATABASE_URL!, max: 10,
     connectionTimeoutMillis: 5000, ...(local ? {} : { ssl: { rejectUnauthorized: true } }) });
   const application = createAccountService({ pool, baseURL: process.env.BETTER_AUTH_URL!,
-    secret: process.env.BETTER_AUTH_SECRET!, staticRoot: resolve('web-dist') });
+    secret: process.env.BETTER_AUTH_SECRET!, staticRoot: resolve('web-dist'),
+    passwordResetMailer: resendPasswordResetMailer(process.env) });
   if (process.argv.includes('--migrate')) {
     try { await application.migrate(); } finally { await pool.end(); }
   } else {
