@@ -5,7 +5,7 @@ import { webcrypto } from 'node:crypto';
 import { JSDOM } from 'jsdom';
 import { encodePcm16 } from '@neophilism/distributed-audio-engine';
 const files=await readdir('web-dist/assets');const bundle=await readFile('web-dist/assets/'+files.find(x=>x.endsWith('.js')),'utf8');
-function fixture(cryptoProvider=webcrypto){const dom=new JSDOM('<!doctype html><html><body><div id="app"></div></body></html>',{url:'https://workspace.example/',runScripts:'outside-only'});Object.defineProperty(dom.window,'crypto',{value:cryptoProvider});dom.window.TextEncoder=TextEncoder;dom.window.TextDecoder=TextDecoder;dom.window.structuredClone=value=>{const cloned=structuredClone(value);const convert=x=>{if(x===null||typeof x!=='object')return x;if(ArrayBuffer.isView(x)){if(x instanceof DataView)return new dom.window.DataView(convert(x.buffer));return new dom.window[x.constructor.name](x);}if(x instanceof ArrayBuffer)return new dom.window.Uint8Array(new Uint8Array(x)).buffer;if(Array.isArray(x))return dom.window.Array.from(x,convert);const result=new dom.window.Object();for(const [k,v] of Object.entries(x))result[k]=convert(v);return result;};return convert(cloned);};let requests=0;dom.window.fetch=()=>{requests++;throw Error('unexpected network');};dom.window.eval(bundle);return{dom,document:dom.window.document,requests:()=>requests};}
+function fixture(cryptoProvider=webcrypto,url='https://workspace.example/',deferLoad=false){const dom=new JSDOM('<!doctype html><html><body><div id="app"></div></body></html>',{url,runScripts:'outside-only'});Object.defineProperty(dom.window,'crypto',{value:cryptoProvider});dom.window.TextEncoder=TextEncoder;dom.window.TextDecoder=TextDecoder;dom.window.structuredClone=value=>{const cloned=structuredClone(value);const convert=x=>{if(x===null||typeof x!=='object')return x;if(ArrayBuffer.isView(x)){if(x instanceof DataView)return new dom.window.DataView(convert(x.buffer));return new dom.window[x.constructor.name](x);}if(x instanceof ArrayBuffer)return new dom.window.Uint8Array(new Uint8Array(x)).buffer;if(Array.isArray(x))return dom.window.Array.from(x,convert);const result=new dom.window.Object();for(const [k,v] of Object.entries(x))result[k]=convert(v);return result;};return convert(cloned);};let requests=0;const probes=[];dom.window.fetch=(path,init)=>{if(['/api/capabilities','/api/auth/get-session'].includes(path)&&init?.method==='GET'&&init.body===undefined){probes.push(path);throw Error('static host');}requests++;throw Error('unexpected network');};dom.window.AbortSignal.timeout=()=>undefined;if(!deferLoad)dom.window.eval(bundle);return{dom,document:dom.window.document,requests:()=>requests,probes:()=>probes,load(){dom.window.eval(bundle);}};}
 const flush=async()=>{for(let i=0;i<5;i++)await new Promise(r=>setImmediate(r));};
 function click(f,label){const b=[...f.document.querySelectorAll('button')].find(b=>b.textContent===label);assert.ok(b,label);b.click();}
 async function upload(f){click(f,'Spatial scene');const input=f.document.querySelector('#stem-file');const bytes=encodePcm16({sampleRate:8000,channels:1,samples:new Float32Array([0.2,-0.2,0.1,-0.1])});const file={name:'private-stem.wav',type:'audio/wav',size:bytes.byteLength,async arrayBuffer(){return new f.dom.window.Uint8Array(bytes).buffer;}};Object.defineProperty(input,'files',{value:[file]});input.dispatchEvent(new f.dom.window.Event('change',{bubbles:true}));await flush();}
@@ -62,4 +62,45 @@ test('sign-out discards private permit encryption that finishes after draft rese
   click(f,'Account');click(f,'Sign out and clear this draft');await flush();crypto.release();await crypto.completed;await flush();
   click(f,'Authorization');assert.doesNotMatch(f.document.body.textContent,/Private evidence prepared/);
  }finally{f.dom.window.close();}
+});
+
+// Startup reads only bodiless account capability/session probes; a static or
+// offline host leaves the local draft fully usable without account controls.
+test('startup restores an account with bodiless probes only and survives a static host',async()=>{
+ const f=fixture();try{await flush();assert.deepEqual(f.probes(),['/api/capabilities']);assert.equal(f.requests(),0);
+  click(f,'Account');assert.ok(f.document.querySelector('#account-sign-in'));assert.ok(f.document.querySelector('#account-recovery-unavailable'));
+  assert.equal(f.document.querySelector('#account-forgot'),null);}finally{f.dom.window.close();}
+});
+function accountFixture(url,responses){const f=fixtureAt(url);const calls=[];f.dom.window.fetch=async(path,init)=>{calls.push({path,method:init.method,body:init.body});const value=responses(path,init);
+ return{ok:value!==401,status:value===401?401:200,headers:{get:()=> 'application/json'},async json(){return value;}};};return{f,calls};}
+function fixtureAt(url){return fixture(webcrypto,url,true);}
+test('a mailed reset link opens the reset form, strips the token from history and posts it once',async()=>{
+ const {f,calls}=accountFixture('https://workspace.example/?account=reset&token=reset_token-123',path=>path==='/api/capabilities'?{passwordRecovery:true}:path==='/api/auth/get-session'?null:{status:true});
+ try{f.load();await flush();assert.equal(f.dom.window.location.search,'');assert.equal(f.dom.window.location.href,'https://workspace.example/');
+  const form=f.document.querySelector('#account-reset');assert.ok(form);form.elements.password.value='replacement-password-2026';
+  form.dispatchEvent(new f.dom.window.Event('submit',{bubbles:true,cancelable:true}));await flush();
+  const reset=calls.filter(c=>c.path==='/api/auth/reset-password');assert.equal(reset.length,1);
+  assert.deepEqual(JSON.parse(reset[0].body),{token:'reset_token-123',newPassword:'replacement-password-2026'});
+  assert.equal(f.document.querySelector('#account-reset'),null);assert.ok(f.document.querySelector('#account-forgot'));
+  assert.match(f.document.body.textContent,/Password changed/);}finally{f.dom.window.close();}
+});
+test('forgot-password, password change and confirmed deletion use the account endpoints and return to sign-in',async()=>{
+ let signedIn=true;
+ const {f,calls}=accountFixture('https://workspace.example/',path=>path==='/api/capabilities'?{passwordRecovery:true}:path==='/api/auth/get-session'?(signedIn?{user:{id:'fixture-user',name:'Fixture <b>account</b>'}}:null):path==='/api/scene/sessions'?{sessions:[]}:{status:true});
+ try{f.load();await flush();const nav=[...f.document.querySelectorAll('button')].find(b=>b.textContent==='Account');nav.click();
+  assert.ok(f.document.querySelector('#account-sign-out'));assert.equal(f.document.querySelector('b'),null);
+  const change=f.document.querySelector('#account-change-password');change.elements.currentPassword.value='old-password-2026';change.elements.newPassword.value='new-password-2026';
+  change.dispatchEvent(new f.dom.window.Event('submit',{bubbles:true,cancelable:true}));await flush();
+  assert.deepEqual(JSON.parse(calls.find(c=>c.path==='/api/auth/change-password').body),{currentPassword:'old-password-2026',newPassword:'new-password-2026',revokeOtherSessions:true});
+  let del=f.document.querySelector('#account-delete');del.elements.password.value='new-password-2026';
+  del.dispatchEvent(new f.dom.window.Event('submit',{bubbles:true,cancelable:true}));await flush();
+  assert.equal(calls.filter(c=>c.path==='/api/auth/delete-user').length,0,'unconfirmed deletion is not sent');
+  del=f.document.querySelector('#account-delete');del.elements.password.value='new-password-2026';del.elements.confirm.checked=true;signedIn=false;
+  del.dispatchEvent(new f.dom.window.Event('submit',{bubbles:true,cancelable:true}));await flush();
+  assert.deepEqual(JSON.parse(calls.find(c=>c.path==='/api/auth/delete-user').body),{password:'new-password-2026'});
+  assert.ok(f.document.querySelector('#account-sign-in'));
+  const forgot=f.document.querySelector('#account-forgot');forgot.elements.email.value='person@example.test';
+  forgot.dispatchEvent(new f.dom.window.Event('submit',{bubbles:true,cancelable:true}));await flush();
+  assert.deepEqual(JSON.parse(calls.find(c=>c.path==='/api/auth/request-password-reset').body),{email:'person@example.test',redirectTo:'https://workspace.example/?account=reset'});
+  assert.match(f.document.body.textContent,/If an account uses that address/);}finally{f.dom.window.close();}
 });

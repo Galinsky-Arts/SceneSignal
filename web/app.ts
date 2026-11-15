@@ -113,7 +113,9 @@ function wipePreparedPermit(prepared: PreparedEvidence): void {
   for(const chunk of prepared.attachment.ciphertextChunks)chunk.fill(0);
 }
 
+if (new URLSearchParams(location.search).get('account') === 'reset') tab = 'Account';
 render();
+void accountUi.start(location, history);
 
 function discardPrivateDraft(): void {
   draftGeneration++; planSaveGeneration++;
