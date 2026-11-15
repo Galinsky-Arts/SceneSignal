@@ -10,7 +10,7 @@
   "scopeNote": "Units filtered by this repository prefix from the multi-repository shared roadmap. Other repository units are not counted here.",
   "schemaVersion": 1,
   "roadmapVersion": 2,
-  "observedAt": "2026-11-10T00:05:58.920Z",
+  "observedAt": "2026-11-15T00:30:00.000Z",
   "units": [
     {
       "id": "SS-01",
@@ -501,11 +501,74 @@
         36,
         37,
         38,
-        40
+        40,
+        42,
+        44,
+        45
       ]
     }
   ],
   "pullRequests": [
+    {
+      "id": 5317756524,
+      "number": 45,
+      "title": "Galinsky Labs preview: external verified Neon database support",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/45",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-11-15T00:19:04Z",
+      "updatedAt": "2026-11-15T00:20:31Z",
+      "closedAt": "2026-11-15T00:20:30Z",
+      "mergedAt": "2026-11-15T00:20:30Z",
+      "headSha": "47f79247531b03dd9611a70d58e25275a61539e2",
+      "baseRef": "main",
+      "mergeCommitSha": "a04a3fb7c6f84a4fe6dcb1b99f7b53cf24ce55dd"
+    },
+    {
+      "id": 5317744093,
+      "number": 44,
+      "title": "Account recovery, password change and account deletion",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/44",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-11-15T00:17:17Z",
+      "updatedAt": "2026-11-15T00:19:35Z",
+      "closedAt": "2026-11-15T00:19:35Z",
+      "mergedAt": "2026-11-15T00:19:35Z",
+      "headSha": "27d50a38eeb8abef906ce8718577855e27b42d0e",
+      "baseRef": "main",
+      "mergeCommitSha": "6ab5012613112ff2c50b7cc5af267b15b745f29b"
+    },
+    {
+      "id": 5317712007,
+      "number": 43,
+      "title": "Track E2EESA status (supersedes #17)",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/43",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-11-15T00:12:49Z",
+      "updatedAt": "2026-11-15T00:17:24Z",
+      "closedAt": "2026-11-15T00:17:24Z",
+      "mergedAt": "2026-11-15T00:17:24Z",
+      "headSha": "f3ee8d2499a60933358dc079fe82ce23987b83dc",
+      "baseRef": "main",
+      "mergeCommitSha": "8b500233d5be879d34ace19c110be015d526494e"
+    },
+    {
+      "id": 5233308866,
+      "number": 42,
+      "title": "Record verified live Render preview and nonbillable authorization",
+      "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/42",
+      "state": "closed",
+      "draft": false,
+      "createdAt": "2026-11-10T00:06:11Z",
+      "updatedAt": "2026-11-10T00:07:11Z",
+      "closedAt": "2026-11-10T00:07:10Z",
+      "mergedAt": "2026-11-10T00:07:10Z",
+      "headSha": "4f4b3c39217e690f1223d769cbd7513486306319",
+      "baseRef": "main",
+      "mergeCommitSha": "0623677eb45a4162d16dd8df3f63994dfe48f0b5"
+    },
     {
       "id": 5233219473,
       "number": 41,
@@ -871,30 +934,30 @@
       "number": 17,
       "title": "Track E2EESA implementation, full testing and independent expert review",
       "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/17",
-      "state": "open",
+      "state": "closed",
       "draft": false,
       "createdAt": "2026-10-12T13:41:49Z",
-      "updatedAt": "2026-10-12T14:34:05Z",
-      "closedAt": null,
+      "updatedAt": "2026-11-15T00:13:18Z",
+      "closedAt": "2026-11-15T00:13:18Z",
       "mergedAt": null,
       "headSha": "8ea3bda44b8a05cfc2fbc374700009b008399b17",
       "baseRef": "main",
-      "mergeCommitSha": "5881442cdd476af3cb2b490ac385b20294d230e2"
+      "mergeCommitSha": null
     },
     {
       "id": 4807543405,
       "number": 16,
       "title": "Automatically merge fresh green owner PRs without bypassing reviews or field gates",
       "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/16",
-      "state": "open",
+      "state": "closed",
       "draft": false,
       "createdAt": "2026-10-10T01:04:43Z",
-      "updatedAt": "2026-10-10T01:04:43Z",
-      "closedAt": null,
+      "updatedAt": "2026-11-15T00:13:13Z",
+      "closedAt": "2026-11-15T00:13:13Z",
       "mergedAt": null,
       "headSha": "76ccefddda4ea34c4c7fa97107d66e01ac7ac7be",
       "baseRef": "main",
-      "mergeCommitSha": "d005c9cc391ef603adfd0d98a1b2188eafdd048d"
+      "mergeCommitSha": "ca8ad2a2c6af40689e89aafc24b4d213df4b44d0"
     },
     {
       "id": 4807512619,
@@ -961,15 +1024,15 @@
       "number": 11,
       "title": "Add signed CI candidate telemetry to Engine Room (opt-in, fail-closed)",
       "url": "https://github.com/Galinsky-Arts/SceneSignal/pull/11",
-      "state": "open",
+      "state": "closed",
       "draft": false,
       "createdAt": "2026-10-10T00:52:07Z",
-      "updatedAt": "2026-10-10T01:06:09Z",
-      "closedAt": null,
+      "updatedAt": "2026-11-15T00:13:16Z",
+      "closedAt": "2026-11-15T00:13:16Z",
       "mergedAt": null,
       "headSha": "2fd5753590f4b9e4bce9657ecb076c3e1c6d1e0c",
       "baseRef": "main",
-      "mergeCommitSha": "c8abd2d46a94dfabe8e444f6dd11eb4af761edd1"
+      "mergeCommitSha": "a29ab0009986a163a7d983a224cb3087ae423cec"
     },
     {
       "id": 4807453990,

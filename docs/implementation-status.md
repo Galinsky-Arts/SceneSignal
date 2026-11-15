@@ -1,5 +1,34 @@
 # SceneSignal implementation and evidence
 
+## Galinsky Labs preview and account lifecycle checkpoint — November 15, 2026
+
+- **New preview.** A free preview now runs at https://scenesignal.onrender.com in
+  the Galinsky Labs Render workspace. Its accounts live in the Galinsky Labs Neon
+  project `scenesignal` (PG 17), not in an expiring Render database. Deployed
+  commit: `a04a3fb7c6f84a4fe6dcb1b99f7b53cf24ce55dd`.
+- **Live checks.** Actual Chromium over HTTPS verified sign-up, session
+  ownership, collaborator grant and departure, reload restore, sign-out/sign-in,
+  password change, account deletion and a phone viewport. `/healthz` returns 200
+  and anonymous access returns 401. See the
+  [verification record](render-deployment-verification-2026-11-15.md).
+- **Account lifecycle (#44).** The app restores existing sessions on load and
+  offers password change, signing out other devices and password-verified account
+  deletion. Deleting an organizer ends its sessions for all collaborators.
+  Email password reset is built and tested, but delivery waits for an
+  owner-provided mail key.
+- **Galinsky Labs host (#45).** `render-start` accepts an external,
+  certificate-verified database. `render.yaml` is unchanged.
+- **E2EESA status (#43).** The status record matches the sibling repositories.
+  All stages remain pending.
+- **Stale PRs.** #11 (CI telemetry) and #17 (superseded by #43) were closed with
+  explanations. #16 (auto-merge) was closed because it could bypass gates.
+- **Test counts.** 164 application cases, four registry cases, 22 PostgreSQL/HTTP
+  cases and ten production-C cases.
+
+Physical SS-30/SS-31 trials, endpoint key provisioning, mail delivery, provider
+integration and restore drills remain pending. The earlier preview in Phillip's
+personal workspace was not changed; its database still expires December 9.
+
 ## Live preview checkpoint — November 10, 2026
 
 The [Render preview](https://scenesignal-preview.onrender.com) is live at commit
