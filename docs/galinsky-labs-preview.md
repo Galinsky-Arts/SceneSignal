@@ -9,6 +9,8 @@ workspace and Neon organization only. Phillip's personal workspace and its
 | --- | --- |
 | Render web service | `scenesignal`, free, Ohio, Node 24.19.0, from `main` of `Galinsky-Arts/SceneSignal`, auto-deploy off |
 | Account database | Neon project `scenesignal` (`aws-us-east-2`, PostgreSQL 17, free), database `scenesignal`, role `scenesignal_app` |
+| Live service | https://scenesignal.onrender.com, `srv-dbsflm0n74is739o3720` |
+| Neon project | `mute-smoke-44149367`, branch `br-summer-rain-begki9om`, endpoint `ep-solitary-frog-be6t6ga8` |
 | Declarative record | [`render.galinsky-labs.yaml`](../render.galinsky-labs.yaml) |
 
 ## Configuration and secrets
@@ -40,4 +42,4 @@ The Neon free plan suspends compute when idle, and has storage and compute-hour
 limits; it is not a backed-up production database. Restore/retention drills,
 mail delivery, endpoint key provisioning and physical qualification remain
 separate acceptance work. The live verification record is dated and kept with
-the other deployment records.
+the other deployment records: [November 15, 2026](render-deployment-verification-2026-11-15.md).

@@ -1,6 +1,6 @@
 # SceneSignal
 
-**Live account-enabled preview:** [scenesignal-preview.onrender.com](https://scenesignal-preview.onrender.com). [Deployment verification](docs/render-deployment-verification-2026-11-10.md). This free preview's database expires December 9, 2026; physical speaker operation remains gated by actual device/site qualification.
+**Live account-enabled preview:** [scenesignal.onrender.com](https://scenesignal.onrender.com) (Galinsky Labs, free; accounts on Neon PostgreSQL 17). [Deployment verification](docs/render-deployment-verification-2026-11-15.md) · [setup](docs/galinsky-labs-preview.md). Accounts support sign-up, collaborators, password change and deletion; email password reset activates once a mail key is configured. The earlier [Phillip's-workspace preview](docs/render-deployment-verification-2026-11-10.md) database expires December 9, 2026. Physical speaker operation remains gated by actual device/site qualification.
 
 The endpoint SDK includes [encrypted per-speaker spatial program preparation](docs/spatial-program-preparation.md) and the [native session runtime](docs/native-session-runtime.md). Actual account/device claims, E2EE parent provisioning, signed output authority and physical qualification remain required for an operating session.
 

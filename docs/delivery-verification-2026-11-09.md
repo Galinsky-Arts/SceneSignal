@@ -121,7 +121,9 @@ human security audit:
 5. Perform the actual authorized SS-30 10–20-speaker trial, then SS-31 staged scale
    qualification, including consent, calibrated acoustic measurements, access,
    safety and failure results. No such physical evidence was generated here.
-6. Verify hosting in the owner's intended workspace and retain the exact service,
+6. (Resolved November 15, 2026 for a free preview: see the
+   [Galinsky Labs verification](render-deployment-verification-2026-11-15.md).)
+   Verify hosting in the owner's intended workspace and retain the exact service,
    deployment commit, HTTPS health and browser evidence. This session found no
    selected Render workspace; service access requires owner workspace selection.
 
