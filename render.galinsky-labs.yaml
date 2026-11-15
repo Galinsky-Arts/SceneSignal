@@ -1,0 +1,28 @@
+# Galinsky Labs free account-enabled preview ($0). The account database is the
+# Neon project "scenesignal" (Galinsky Labs organization, aws-us-east-2, PG 17),
+# not an expiring Render database. DATABASE_URL is entered once as a secret in
+# Render (sync: false); it is never committed. render.yaml remains the separate
+# configuration for the earlier preview and is unchanged.
+services:
+  - type: web
+    name: scenesignal
+    runtime: node
+    plan: free
+    region: ohio
+    repo: https://github.com/Galinsky-Arts/SceneSignal
+    branch: main
+    autoDeployTrigger: 'off'
+    buildCommand: npm run core:prepare && npm ci --include=dev --ignore-scripts && npm run check
+    startCommand: node scripts/render-start.mjs
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_VERSION
+        value: 24.19.0
+      - key: NODE_ENV
+        value: production
+      - key: NPM_CONFIG_INCLUDE
+        value: dev
+      - key: BETTER_AUTH_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false

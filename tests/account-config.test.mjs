@@ -22,8 +22,27 @@ test('startup rejects unsafe database transport and does not print credential-be
   }
   for (const database of [marker, 'postgres://user:' + marker + '@database.invalid/account?ssl=false']) {
     const result = spawnSync(process.execPath, ['scripts/render-start.mjs'], { encoding: 'utf8',
-      env: { ...process.env, DATABASE_URL: database, POSTGRES_EXTERNAL_HOST: 'dpg-example-a.virginia-postgres.render.com' } });
+      env: { ...process.env, DATABASE_URL: database, POSTGRES_EXTERNAL_HOST: 'dpg-example-a.virginia-postgres.render.com',
+        RENDER_EXTERNAL_URL: 'https://scenesignal.example' } });
     assert.equal(result.status, 1);
+    assert.ok(!(result.stdout + result.stderr).includes(marker));
+    assert.match(result.stderr, /Render configuration is invalid/);
+  }
+});
+test('external-provider mode refuses private, loopback or Render-internal hosts and non-HTTPS service URLs', () => {
+  const marker = 'private-config-marker-not-for-production';
+  const cases = [
+    ['postgres://user:' + marker + '@dpg-internal-a/account', 'https://scenesignal.example'],
+    ['postgres://user:' + marker + '@127.0.0.1/account', 'https://scenesignal.example'],
+    ['postgres://user:' + marker + '@db.service.internal/account', 'https://scenesignal.example'],
+    ['postgres://user:' + marker + '@ep-example.us-east-2.aws.neon.tech/account?sslmode=require', 'http://scenesignal.example'],
+    ['postgres://user:' + marker + '@ep-example.us-east-2.aws.neon.tech/account?sslmode=require', '']
+  ];
+  for (const [database, external] of cases) {
+    const env = { ...process.env, DATABASE_URL: database, RENDER_EXTERNAL_URL: external };
+    delete env.POSTGRES_EXTERNAL_HOST;
+    const result = spawnSync(process.execPath, ['scripts/render-start.mjs'], { encoding: 'utf8', env });
+    assert.equal(result.status, 1, database);
     assert.ok(!(result.stdout + result.stderr).includes(marker));
     assert.match(result.stderr, /Render configuration is invalid/);
   }
