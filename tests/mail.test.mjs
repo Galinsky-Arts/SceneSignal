@@ -23,3 +23,18 @@ test('configured mail sends only the HTTPS link to the account address and surfa
   await assert.rejects(mailer({ to: 'person@example.test', url: 'http://scenesignal.example/r' }), /RESET_LINK_HTTPS_REQUIRED/);
   assert.equal(sent.length, 2);
 });
+
+test('verification mail follows the same configuration and sends only the HTTPS link', async () => {
+  const { resendEmailVerificationMailer } = await import('../dist/server/mail.js');
+  assert.equal(resendEmailVerificationMailer({}), undefined);
+  assert.throws(() => resendEmailVerificationMailer({ RESEND_API_KEY: 're_test' }), /MAIL_CONFIGURATION_INVALID/);
+  const sent = [];
+  const mailer = resendEmailVerificationMailer({ RESEND_API_KEY: 're_test', SCENESIGNAL_MAIL_FROM: 'accounts@example.test' },
+    async (url, init) => { sent.push({ url, init }); return new Response('{}', { status: 200 }); });
+  await mailer({ to: 'person@example.test', url: 'https://scenesignal.example/api/auth/verify-email?token=t' });
+  const body = JSON.parse(sent[0].init.body);
+  assert.deepEqual(body.to, ['person@example.test']);
+  assert.match(body.subject, /Confirm your SceneSignal email/);
+  assert.ok(body.text.includes('https://scenesignal.example/api/auth/verify-email?token=t'));
+  await assert.rejects(mailer({ to: 'person@example.test', url: 'http://scenesignal.example/v' }), /VERIFY_LINK_HTTPS_REQUIRED/);
+});

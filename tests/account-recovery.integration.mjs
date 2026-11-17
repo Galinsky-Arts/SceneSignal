@@ -36,11 +36,11 @@ test('password recovery, password change and account deletion through real Bette
     await application.migrate();
     const carol = await signUp('carol'), dave = await signUp('dave');
     await t.test('capabilities disclose only whether recovery delivery is configured', async () => {
-      assert.deepEqual(await (await call('/api/capabilities')).json(), { passwordRecovery: true });
+      assert.deepEqual(await (await call('/api/capabilities')).json(), { passwordRecovery: true, emailVerification: false });
       const disabled = createAccountService({ pool, baseURL: origin, secret });
       const previous = application; application = disabled;
       try {
-        assert.deepEqual(await (await call('/api/capabilities')).json(), { passwordRecovery: false });
+        assert.deepEqual(await (await call('/api/capabilities')).json(), { passwordRecovery: false, emailVerification: false });
         const refused = await call('/api/auth/request-password-reset', { body: { email: 'carol@example.test', redirectTo: origin + '/' } });
         assert.notEqual(refused.status, 200);
       } finally { application = previous; }
@@ -110,5 +110,57 @@ test('password recovery, password change and account deletion through real Bette
   } finally {
     server.closeAllConnections(); await new Promise(resolve => server.close(resolve));
     await pool.end(); await admin.query('DROP SCHEMA IF EXISTS ' + schema + ' CASCADE'); await admin.end();
+  }
+});
+
+test('email verification is off without mail and verifies ownership with a signed, expiring link when configured', async () => {
+  const admin = new pg.Pool({ connectionString });
+  const schema = 'scene_verify_' + randomUUID().replaceAll('-', '');
+  await admin.query('CREATE SCHEMA ' + schema);
+  const pool = new pg.Pool({ connectionString, max: 8, options: '-c search_path=' + schema });
+  const outbox = [];
+  let application;
+  const server = createServer((request, response) => { void application.handle(request, response); });
+  server.listen(0, '127.0.0.1'); await once(server, 'listening');
+  const origin = 'http://127.0.0.1:' + server.address().port;
+  const secret = randomBytes(32).toString('base64');
+  const call = (path, { cookie, body, method = body === undefined ? 'GET' : 'POST' } = {}) =>
+    fetch(origin + path, { method, redirect: 'manual', headers: { Origin: origin, ...(cookie ? { Cookie: cookie } : {}),
+      ...(body === undefined ? {} : { 'Content-Type': 'application/json' }) }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) });
+  try {
+    application = createAccountService({ pool, baseURL: origin, secret });
+    await application.migrate();
+    const off = await call('/api/auth/sign-up/email', { body: { name: 'erin', email: 'erin@example.test', password: 'first-test-password-2026' } });
+    assert.equal(off.status, 200);
+    assert.equal((await off.json()).user.emailVerified, false);
+    assert.equal(outbox.length, 0);
+
+    application = createAccountService({ pool, baseURL: origin, secret, emailVerificationMailer: async message => { outbox.push(message); } });
+    assert.deepEqual(await (await call('/api/capabilities')).json(), { passwordRecovery: false, emailVerification: true });
+    const signUp = await call('/api/auth/sign-up/email', { body: { name: 'fay', email: 'fay@example.test', password: 'first-test-password-2026',
+      callbackURL: '/?account=verified' } });
+    assert.equal(signUp.status, 200);
+    const cookie = cookies(signUp);
+    for (let i = 0; i < 50 && !outbox.length; i++) await new Promise(resolve => setTimeout(resolve, 10));
+    assert.equal(outbox.length, 1);
+    assert.equal(outbox[0].to, 'fay@example.test');
+    const link = new URL(outbox[0].url);
+    assert.equal(link.origin, origin);
+    assert.equal(link.pathname, '/api/auth/verify-email');
+    // A tampered token is refused and the address stays unverified.
+    const forged = new URL(link); forged.searchParams.set('token', link.searchParams.get('token').slice(0, -2) + 'xx');
+    const refused = await fetch(forged, { redirect: 'manual' });
+    assert.match(refused.headers.get('location') ?? '', /error=/);
+    const verified = await fetch(link, { redirect: 'manual' });
+    assert.equal(verified.status, 302);
+    assert.equal(new URL(verified.headers.get('location'), origin).search, '?account=verified');
+    const session = await (await call('/api/auth/get-session', { cookie })).json();
+    assert.equal(session.user.emailVerified, true);
+    // Cross-origin redirect targets are refused.
+    const evil = await call('/api/auth/send-verification-email', { cookie, body: { email: 'fay@example.test', callbackURL: 'https://evil.example/' } });
+    assert.equal(evil.status, 403);
+  } finally {
+    server.close(); await pool.end();
+    await admin.query('DROP SCHEMA ' + schema + ' CASCADE'); await admin.end();
   }
 });

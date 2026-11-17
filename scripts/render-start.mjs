@@ -54,6 +54,19 @@ if (code !== 0 || signal) {
       process.exitCode = 1; copied = false;
     }
   }
+  // Optional restore drill against a restored copy (e.g. a Neon point-in-time
+  // branch). Read-only on both databases; logs names, counts and digests only.
+  // A drill result never blocks the service; set the variable only for a drill.
+  const drillTarget = process.env.SCENESIGNAL_RESTORE_DRILL_DATABASE_URL ?? '';
+  if (copied && drillTarget) {
+    try {
+      const { runRestoreDrill } = await import('./restore-drill.mjs');
+      await runRestoreDrill(process.env.DATABASE_URL, drillTarget, { log: entry => console.log(JSON.stringify(entry)) });
+    } catch (error) {
+      const code = /^DRILL_[A-Z_]+/.exec(error instanceof Error ? error.message : '')?.[0] ?? 'DRILL_FAILED';
+      console.error('SceneSignal restore drill did not complete: ' + code);
+    }
+  }
   // Import in-process so the service receives Render's shutdown signals directly.
   if (copied) await import('../dist/server/main.js');
 }

@@ -14,8 +14,10 @@ import type { SceneActor, SceneRole } from '../src/session.js';
 /** Delivers a single-use password-reset link to the account's address. The
  * message contains only the link; it must not be logged or retained. */
 export type PasswordResetMailer = (message: { to: string; url: string }) => Promise<void>;
+/** Delivers a single-use email-ownership verification link. */
+export type EmailVerificationMailer = (message: { to: string; url: string }) => Promise<void>;
 export interface AccountServiceOptions { pool: Pool; baseURL: string; secret: string; staticRoot?: string;
-  passwordResetMailer?: PasswordResetMailer | undefined }
+  passwordResetMailer?: PasswordResetMailer | undefined; emailVerificationMailer?: EmailVerificationMailer | undefined }
 class HttpFailure extends Error { constructor(readonly status: number, readonly code: string) { super(code); } }
 function fail(status: number, code: string): never { throw new HttpFailure(status, code); }
 async function jsonBody(request: IncomingMessage): Promise<Record<string, unknown>> {
@@ -51,6 +53,8 @@ export function createAccountService(options: AccountServiceOptions) {
   const staticRoot = options.staticRoot;
   const mailer = options.passwordResetMailer;
   invariant(mailer === undefined || typeof mailer === 'function', 'ACCOUNT_SERVICE_MAILER_INVALID');
+  const verifier = options.emailVerificationMailer;
+  invariant(verifier === undefined || typeof verifier === 'function', 'ACCOUNT_SERVICE_MAILER_INVALID');
   const configuration = {
     appName: 'SceneSignal', baseURL: base.origin, secret: options.secret, database: pool,
     trustedOrigins: [base.origin],
@@ -59,8 +63,15 @@ export function createAccountService(options: AccountServiceOptions) {
       ...(mailer ? { sendResetPassword: async ({ user, url }: { user: { email: string }; url: string }) => {
         // Never surface delivery failures to the requester: that would reveal
         // whether the address has an account.
-        try { await mailer({ to: user.email, url }); } catch { console.error('SceneSignal password-reset delivery failed.'); }
+        // Not awaited, so response timing does not reveal it either.
+        void mailer({ to: user.email, url }).catch(() => console.error('SceneSignal password-reset delivery failed.'));
       } } : {}) },
+    // Email-ownership verification is OFF unless mail is configured. It marks the
+    // address verified; it does not gate sign-in or grant any session role.
+    ...(verifier ? { emailVerification: { sendOnSignUp: true, autoSignInAfterVerification: false, expiresIn: 86400,
+      sendVerificationEmail: async ({ user, url }: { user: { email: string }; url: string }) => {
+        void verifier({ to: user.email, url }).catch(() => console.error('SceneSignal verification delivery failed.'));
+      } } } : {}),
     user: { deleteUser: { enabled: true,
       // Ending an organizer account ends its session references: collaborators
       // must not retain access to a session nobody can administer.
@@ -77,7 +88,7 @@ export function createAccountService(options: AccountServiceOptions) {
     session: { expiresIn: 86400, updateAge: 3600, cookieCache: { enabled: false } },
     rateLimit: { enabled: true, window: 60, max: 60, storage: 'database',
       customRules: { '/request-password-reset': { window: 900, max: 3 }, '/reset-password': { window: 900, max: 10 },
-        '/change-password': { window: 900, max: 10 }, '/delete-user': { window: 900, max: 5 } } },
+        '/change-password': { window: 900, max: 10 }, '/send-verification-email': { window: 900, max: 3 }, '/delete-user': { window: 900, max: 5 } } },
     advanced: { cookiePrefix: 'scenesignal', useSecureCookies: base.protocol === 'https:',
       ipAddress: { ipAddressHeaders: ['x-scenesignal-verified-ip'] } },
     logger: { level: 'error' }, telemetry: { enabled: false }
@@ -109,7 +120,7 @@ export function createAccountService(options: AccountServiceOptions) {
       if (url.origin !== base.origin) fail(400, 'invalid_request_origin');
       if (url.pathname.startsWith('/api/auth/')) { await toNodeHandler(getAuth())(request, response); return; }
       if (url.pathname === '/api/capabilities' && request.method === 'GET') {
-        send(response, 200, { passwordRecovery: mailer !== undefined }); return;
+        send(response, 200, { passwordRecovery: mailer !== undefined, emailVerification: verifier !== undefined }); return;
       }
       if (url.pathname === '/healthz' && request.method === 'GET') {
         await pool.query('SELECT 1 FROM "user","session","account","verification","rateLimit",scene_account_membership LIMIT 0');

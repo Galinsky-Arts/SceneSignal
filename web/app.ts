@@ -113,7 +113,7 @@ function wipePreparedPermit(prepared: PreparedEvidence): void {
   for(const chunk of prepared.attachment.ciphertextChunks)chunk.fill(0);
 }
 
-if (new URLSearchParams(location.search).get('account') === 'reset') tab = 'Account';
+if (['reset', 'verified'].includes(new URLSearchParams(location.search).get('account') ?? '')) tab = 'Account';
 render();
 void accountUi.start(location, history);
 

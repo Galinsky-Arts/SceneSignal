@@ -54,6 +54,13 @@ authorization, root membership and native output authority remain separate.
   address bar and history before showing the form. A reset revokes every session.
   Without a mail key, the Account tab says email recovery is not configured instead
   of offering a form that cannot deliver.
+- **Email verification.** Enabled by the same `RESEND_API_KEY` and
+  `SCENESIGNAL_MAIL_FROM` settings. Sign-up sends a signed link that expires after
+  24 hours; the Account tab shows Verified/Not verified and can resend (three per
+  client per 15 minutes, same-origin redirect targets only). Verification marks
+  the address only: it does not gate sign-in or grant session roles. Without mail
+  the Account tab says verification is not configured and names the settings.
+  Delivery is never awaited, so timing does not reveal whether an address exists.
 - **Account deletion.** Requires the current password on every request (session age
   alone is not enough) plus an explicit confirmation. Deleting an organizer also
   deletes every membership in the sessions it organized, so collaborators never
@@ -96,9 +103,10 @@ links are single-use, rate limited, origin-bound and revoke sessions; that unkno
 addresses send nothing; that password changes require the current password; and
 that deletion re-proves the password and removes organized session references.
 
-This service does not assert verified email ownership. Reset delivery needs an
-owner-provided mail key and verified sender domain. Email verification, an actual production database
-and deployment, restore/retention drills and endpoint account-root/key provisioning
-remain operational acceptance work. Password/account recovery must not become
+Email ownership is asserted only for accounts that followed a verification link,
+which needs an owner-provided mail key and verified sender domain (reset delivery
+too). Backup/restore and the restore drill are in [restore-runbook.md](restore-runbook.md).
+An actual production database and deployment, retention policy and endpoint
+account-root/key provisioning remain operational acceptance work. Password/account recovery must not become
 server custody of private media keys. No live account deployment, physical device
 qualification or independent certification is inferred from these local tests.
