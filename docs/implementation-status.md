@@ -1,5 +1,13 @@
 # SceneSignal implementation and evidence
 
+## Audio Engine pin — November 17, 2026
+
+The Audio Engine pin moved from `c6fd5fa` to `292b564` (Android WebView bridge,
+native queue-fill reporting and the optional `queueFill` bridge member; no
+breaking change for SceneSignal). `npm run check` passes 166 + 4 cases and the
+PostgreSQL integration suite 26 cases locally. No device or field evidence is
+implied by the pin.
+
 ## Restore drill and email verification — November 17, 2026
 
 - **Restore runbook and drill.** [restore-runbook.md](restore-runbook.md) covers Neon
