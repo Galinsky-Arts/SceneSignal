@@ -1,5 +1,20 @@
 # SceneSignal implementation and evidence
 
+## Restore drill and email verification — November 17, 2026
+
+- **Restore runbook and drill.** [restore-runbook.md](restore-runbook.md) covers Neon
+  backups, incident restore and a non-destructive drill. `scripts/restore-drill.mjs`
+  compares a restored copy with live read-only (row counts, SHA-256 row digests,
+  readiness probe; names/counts only in logs). The first live drill against a
+  Neon point-in-time branch passed: all 7 tables matched (`restored-matches-live`).
+- **Email verification.** Built behind the existing mail settings; OFF until
+  `RESEND_API_KEY` and `SCENESIGNAL_MAIL_FROM` are set, and the Account tab says so.
+  Reset-mail delivery is no longer awaited (no timing signal for unknown addresses).
+- **Tests.** 166 application cases, 4 registry cases and 26 PostgreSQL/HTTP cases
+  pass (new: restore drill, verification flow, verification mail).
+- **Pending.** SS-30–SS-32 field pilot and release evidence (no field evidence is
+  claimed), endpoint key provisioning, mail delivery (owner key), provider integrations.
+
 ## Galinsky Arts preview database and dependency checkpoint — November 15, 2026
 
 - **Neon.** The Galinsky Arts preview (`scenesignal-preview`) moved from the

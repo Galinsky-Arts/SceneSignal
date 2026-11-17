@@ -63,3 +63,17 @@ runs inside the service start):
 
 See the dated entries below. Each records the branch point, the deploy and the
 logged result exactly as observed.
+
+### 2026-11-17 — first restore drill (passed)
+
+- Restore point: Neon branch `restore-drill-20261117` (`br-wandering-lab-bb3lczla`)
+  of `main` at `parent_timestamp` 2026-11-17T02:20:04Z, with its own read-write compute.
+- Run: Render deploy `dep-dbtrmadg1s2s73ei5s40` (commit `76835f9`) with
+  `SCENESIGNAL_RESTORE_DRILL_DATABASE_URL` set; drill at 02:26:27–02:26:28Z.
+- Logged result: `status: restored-matches-live`, `usable: true`, 0 missing,
+  0 differing, 0 extra tables. Rows (live = restored, digests equal): `account` 2,
+  `rateLimit` 4, `scene_account_membership` 1, `scene_contribution_events` 0,
+  `session` 0, `user` 2, `verification` 0. The readiness probe succeeded on the copy.
+- Cleanup: the variable was deleted from the service and the drill branch deleted.
+- Not exercised: an in-place restore of the production branch (destructive; not
+  needed to prove the backup is restorable) and an interactive sign-in against the copy.
